@@ -6,7 +6,7 @@ export default async (client: Manager, queue: Queue) => {
     await client.UpdateMusic(queue);
 
     const embed = new EmbedBuilder()
-        .setColor('#000001')
+        .setColor(client.color)
         .setDescription(`**Channel is Empty!**`)
 
     queue.textChannel!.send({ embeds: [embed] })

@@ -3,6 +3,8 @@ import { Manager } from "../../manager.js";
 import { EmbedBuilder } from "discord.js";
 
 export default async (client: Manager, queue: Queue, song: Song) => {
+  console.log("Exec")
+  console.log(await queue.textChannel)
   const channel_id = await client.queue_message.get(String(song.user?.id))
   const msg = await queue.textChannel!.messages.cache.get(channel_id);
 

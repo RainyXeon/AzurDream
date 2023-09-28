@@ -18,6 +18,7 @@ export default async (client: Manager) => {
   for (let file of events) {
     const evt = await import(`../../events/player/${file}`);
     const eName = file.split(".")[0] as keyof DisTubeEvents;
+    console.log(eName)
     client.manager.on(eName, evt.default.bind(null, client));
   }
 };

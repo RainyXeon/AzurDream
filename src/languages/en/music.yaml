@@ -206,3 +206,4 @@ enabled: "Enabled"
 disabled: "Disabled"
 
 no_node: "No lavalink server avalible! \nPlease try again after 5 minutes."
+already_playing: "I already playing in voice channel."

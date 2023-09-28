@@ -93,8 +93,6 @@ export default async (
         (m) => !m.user.bot,
       ).size === 0
     ) {
-      await delay(client.config.lavalink.LEAVE_TIMEOUT);
-
       const vcMembers = oldState.guild.members.me!.voice.channel?.members.size;
       if (!vcMembers || vcMembers === 1) {
         await client.manager.voices.leave(newState.guild);

@@ -11,7 +11,7 @@ export default async (client: Manager, queue: Queue, track: Song) => {
   const embed = new EmbedBuilder()
   .setAuthor({ name: `Starting Playing...`, iconURL: 'https://cdn.discordapp.com/emojis/741605543046807626.gif' })
   .setThumbnail(String(track!.thumbnail))
-  .setColor('#000001')
+  .setColor(client.color)
   .setDescription(`**[${track!.name}](${track.url})**`)
   .addFields({ name: `Uploader:`, value: `**[${track.uploader.name}](${track.uploader.url})**`, inline: true })
   .addFields({ name: `Requester:`, value: `${track.user}`, inline: true })

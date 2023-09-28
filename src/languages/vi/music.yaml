@@ -193,3 +193,5 @@ enabled: "Đã bật"
 disabled: "Đã tắt"
 
 no_node: "Không có máy chủ lavalink! \nVui lòng thử lại sau 5 phút."
+
+already_playing: "Tôi đã chơi nhạc ở kênh khác rồi. ;("

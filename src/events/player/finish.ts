@@ -7,7 +7,7 @@ export default async (client: Manager, queue: Queue) => {
     
     const embed = new EmbedBuilder()
         .setDescription(`\`📛\` | **Song has been:** \`Ended\``)
-        .setColor('#000001')
+        .setColor(client.color)
 
     queue.textChannel!.send({ embeds: [embed] })
 }

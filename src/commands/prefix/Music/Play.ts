@@ -114,11 +114,12 @@ export default {
       return msg.edit(`${client.i18n.get(language, "music", "play_speak")}`);
 
     try {
-        await client.manager.play(message.member!.voice.channel as VoiceBasedChannel, args[0], {
+        const info = await client.manager.play(message.member!.voice.channel as VoiceBasedChannel, args[0], {
           member: message.member as GuildMember,
           textChannel: message.channel as TextChannel,
           message,
         });
+        console.log(info)
     } catch (e) {
         //
     }
