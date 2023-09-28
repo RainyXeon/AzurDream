@@ -52,6 +52,7 @@ export class Manager extends Client {
   is_db_connected: boolean;
   ws_message?: Collection<string, any>;
   queue_message: Collection<string, any>;
+  query_message: Collection<string, any>;
 
   // Main class
   constructor() {
@@ -101,6 +102,7 @@ export class Manager extends Client {
     this.sent_queue = new Collection();
     this.aliases = new Collection();
     this.queue_message = new Collection();
+    this.query_message = new Collection();
     this.is_db_connected = false;
 
     process.on("unhandledRejection", (error) =>
@@ -129,10 +131,10 @@ export class Manager extends Client {
           emitEventsAfterFetching: true
         }),
         new SoundCloudPlugin(),
-        new YtDlpPlugin()
+        new YtDlpPlugin(),
+        new SoundCloudPlugin()
       ]
     })
-
     // if (this.config.features.WEB_SERVER.enable) {
     //   WebServer(this);
     // }

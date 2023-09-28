@@ -3,8 +3,6 @@ import { Manager } from "../../manager.js";
 import { Playlist, Queue } from "distube";
 
 export default async (client: Manager, queue: Queue, playlist: Playlist) => {
-  console.log("Exec")
-  console.log(await queue.textChannel)
   const data = await client.queue_message.get(String(playlist.user!.id))
   const msg = await queue.textChannel!.messages.cache.get(data);
 
