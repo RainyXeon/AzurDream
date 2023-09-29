@@ -136,7 +136,14 @@ export class Manager extends Client {
         dlChunkSize: 1024 * 1024 * 4,
       },
       plugins: [
+        this.config.distube.SPOTIFY.enable ? 
         new SpotifyPlugin({
+          emitEventsAfterFetching: true,
+          api: {
+            clientId: this.config.distube.SPOTIFY.id,
+            clientSecret: this.config.distube.SPOTIFY.secret,
+          },
+        }) : new SpotifyPlugin({
           emitEventsAfterFetching: true,
         }),
         new YtDlpPlugin({ update: true }),

@@ -154,5 +154,8 @@ export default {
         message,
       },
     );
+
+    await message.delete();
+
   },
 };
