@@ -103,8 +103,9 @@ export default {
                 .dependencies["discord.js"],
             })}
             ${client.i18n.get(language, "help", "codename", {
-              codename: JSON.parse(await fs.readFileSync("package.json", "utf-8"))
-                .name,
+              codename: JSON.parse(
+                await fs.readFileSync("package.json", "utf-8"),
+              ).name,
             })}
             `,
       )
@@ -139,7 +140,7 @@ export default {
       let filter = (i: any) =>
         i.isStringSelectMenu() &&
         i.user &&
-        i.message.author.id == client.user!.id
+        i.message.author.id == client.user!.id;
       let collector = await msg.createMessageComponentCollector({
         filter,
         time: 60000,

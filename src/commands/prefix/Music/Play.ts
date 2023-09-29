@@ -1,11 +1,18 @@
-import { EmbedBuilder, Message, PermissionsBitField, VoiceBasedChannel, GuildMember, TextChannel } from "discord.js";
+import {
+  EmbedBuilder,
+  Message,
+  PermissionsBitField,
+  VoiceBasedChannel,
+  GuildMember,
+  TextChannel,
+} from "discord.js";
 import { Manager } from "../../../manager.js";
 import yts from "yt-search";
 import { SearchResultType } from "distube";
 
-const REGEX = /(?:https?:\/\/)?(:www|:music)?youtu(?:\.be\/|be.com\/\S*(?:watch|embed)(?:(?:(?=\/[-a-zA-Z0-9_]{11,}(?!\S))\/)|(?:\S*v=|v\/)))([-a-zA-Z0-9_]{11,})/
-const SHORT_REGEX = /^.*(youtu.be\/|list=)([^#\&\?]*).*/
-
+const REGEX =
+  /(?:https?:\/\/)?(:www|:music)?youtu(?:\.be\/|be.com\/\S*(?:watch|embed)(?:(?:(?=\/[-a-zA-Z0-9_]{11,}(?!\S))\/)|(?:\S*v=|v\/)))([-a-zA-Z0-9_]{11,})/;
+const SHORT_REGEX = /^.*(youtu.be\/|list=)([^#\&\?]*).*/;
 
 export default {
   name: "play",
@@ -99,10 +106,12 @@ export default {
     //   msg.edit({ content: " ", embeds: [embed] });
     // }
 
-    const value = args[0]
-    const msg = await message.channel.send(`🔍 **Searching...** \`${args[0]}\``);
+    const value = args[0];
+    const msg = await message.channel.send(
+      `🔍 **Searching...** \`${args[0]}\``,
+    );
 
-    await client.queue_message.set(message.author.id, msg.id)
+    await client.queue_message.set(message.author.id, msg.id);
 
     const { channel } = message.member!.voice;
     if (!channel)
@@ -120,24 +129,30 @@ export default {
     )
       return msg.edit(`${client.i18n.get(language, "music", "play_speak")}`);
 
-    let res_info
+    let res_info;
 
-    const playlist_info = SHORT_REGEX.exec(value)
-    const video_info = REGEX.exec(value)
+    const playlist_info = SHORT_REGEX.exec(value);
+    const video_info = REGEX.exec(value);
 
     if (playlist_info && !video_info) {
-      const rex_id = SHORT_REGEX.exec(value)
-      res_info = await yts({ listId: rex_id![2] })
+      const rex_id = SHORT_REGEX.exec(value);
+      res_info = await yts({ listId: rex_id![2] });
     } else if (video_info) {
-      const rex_id = REGEX.exec(value)
-      console.log(rex_id)
-      res_info = await yts({ videoId: rex_id![2] })
+      const rex_id = REGEX.exec(value);
+      console.log(rex_id);
+      res_info = await yts({ videoId: rex_id![2] });
+    } else {
+      res_info = await client.manager.search(value);
     }
 
-    await client.manager.play(message.member!.voice.channel as VoiceBasedChannel, value, {
-      member: message.member as GuildMember,
-      textChannel: message.channel as TextChannel,
-      message,
-    });
+    await client.manager.play(
+      message.member!.voice.channel as VoiceBasedChannel,
+      value,
+      {
+        member: message.member as GuildMember,
+        textChannel: message.channel as TextChannel,
+        message,
+      },
+    );
   },
 };

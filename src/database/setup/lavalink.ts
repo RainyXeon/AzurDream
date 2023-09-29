@@ -1,6 +1,6 @@
 import chalk from "chalk";
 import { Manager } from "../../manager.js";
-import { VoiceChannel } from "discord.js"
+import { VoiceChannel } from "discord.js";
 
 export default async (client: Manager) => {
   const lavalink = chalk.hex("#ffc61c");
@@ -33,7 +33,7 @@ export default async (client: Manager) => {
       const channel = client.channels.cache.get(data.text);
       const voice = client.channels.cache.get(data.voice);
       if (!channel || !voice) return client.db.delete(`autoreconnect.${key}`);
-      await client.manager.voices.join(voice as VoiceChannel)
+      await client.manager.voices.join(voice as VoiceChannel);
     }),
       index * 5000;
   });

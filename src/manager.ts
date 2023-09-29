@@ -12,15 +12,16 @@ import { I18n } from "@hammerhq/localization";
 import { resolve } from "path";
 import * as configData from "./plugins/config.js";
 import winstonLogger from "./plugins/logger.js";
-import { DisTube } from 'distube'
-import { SpotifyPlugin } from '@distube/spotify'
-import { SoundCloudPlugin } from '@distube/soundcloud'
-import { YtDlpPlugin } from '@distube/yt-dlp'
+import { DisTube } from "distube";
+import { SpotifyPlugin } from "@distube/spotify";
+import { SoundCloudPlugin } from "@distube/soundcloud";
+import { YtDlpPlugin } from "@distube/yt-dlp";
 import { join, dirname } from "path";
 import { fileURLToPath } from "url";
 import { QuickDB } from "quick.db";
 import { WebServer } from "./webserver/index.js";
 import WebSocket from "ws";
+import { DeezerPlugin } from "@distube/deezer";
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
 winstonLogger.info("Booting client...");
@@ -89,7 +90,6 @@ export class Manager extends Client {
     this.prefix = this.config.features.MESSAGE_CONTENT.prefix || "d!";
     this.shard_status = false;
 
-
     this.config.features.WEB_SERVER.websocket.enable
       ? (this.ws_message = new Collection())
       : undefined;
@@ -123,18 +123,27 @@ export class Manager extends Client {
 
     this.manager = new DisTube(this, {
       leaveOnStop: false,
+      leaveOnEmpty: false,
+      leaveOnFinish: false,
       emitNewSongOnly: true,
-      emitAddSongWhenCreatingQueue: false,
-      emitAddListWhenCreatingQueue: false,
+      emitAddSongWhenCreatingQueue: true,
+      emitAddListWhenCreatingQueue: true,
+      ytdlOptions: {
+        highWaterMark: 1024 * 1024 * 64,
+        quality: "highestaudio",
+        filter: "audioonly",
+        liveBuffer: 60000,
+        dlChunkSize: 1024 * 1024 * 4,
+      },
       plugins: [
         new SpotifyPlugin({
-          emitEventsAfterFetching: true
+          emitEventsAfterFetching: true,
         }),
+        new YtDlpPlugin({ update: true }),
         new SoundCloudPlugin(),
-        new YtDlpPlugin(),
-        new SoundCloudPlugin()
-      ]
-    })
+        new DeezerPlugin(),
+      ],
+    });
     // if (this.config.features.WEB_SERVER.enable) {
     //   WebServer(this);
     // }

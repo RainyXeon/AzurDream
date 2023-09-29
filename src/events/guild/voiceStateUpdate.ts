@@ -53,7 +53,7 @@ export default async (
   if (!player) return;
 
   if (!newState.guild.members.cache.get(client.user!.id)!.voice.channelId)
-  await client.manager.voices.leave(player.textChannel!.guild);
+    await client.manager.voices.leave(player.textChannel!.guild);
 
   if (
     newState.channelId &&
@@ -81,7 +81,9 @@ export default async (
 
   const vcRoom = oldState.guild.members.me!.voice.channel!.id;
 
-  const leaveEmbed = client.channels.cache.get(String(player.textChannel?.id)) as TextChannel;
+  const leaveEmbed = client.channels.cache.get(
+    String(player.textChannel?.id),
+  ) as TextChannel;
 
   if (
     oldState.guild.members.cache.get(client.user!.id)!.voice.channelId ===
