@@ -4,5 +4,5 @@ import { EmbedBuilder } from "discord.js";
 import yts from "yt-search";
 
 export default async (client: Manager, queue: Queue) => {
-  queue.volume = 100;
+  queue.setVolume(100);
 };

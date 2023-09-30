@@ -10,15 +10,15 @@ export default {
   run: async (
     interaction: CommandInteraction,
     client: Manager,
-    language: string
+    language: string,
   ) => {
     await interaction.deferReply({ ephemeral: false });
 
     const PremiumPlan = await client.db.get(
-      `premium.user_${interaction.user.id}`
+      `premium.user_${interaction.user.id}`,
     );
     const expires = moment(PremiumPlan.expiresAt).format(
-      "do/MMMM/YYYY (HH:mm:ss)"
+      "do/MMMM/YYYY (HH:mm:ss)",
     );
 
     const embed = new EmbedBuilder()
@@ -31,7 +31,7 @@ export default {
           user: interaction.user.tag,
           plan: PremiumPlan.plan,
           expires: expires,
-        })}`
+        })}`,
       )
       .setColor(client.color)
       .setTimestamp();

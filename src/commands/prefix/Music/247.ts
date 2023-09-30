@@ -12,13 +12,13 @@ export default {
     message: Message,
     args: string[],
     language: string,
-    prefix: string
+    prefix: string,
   ) => {
     const msg = await message.channel.send(
-      `${client.i18n.get(language, "music", "247_loading")}`
+      `${client.i18n.get(language, "music", "247_loading")}`,
     );
 
-    const player = client.manager.getQueue(message.guild!)
+    const player = client.manager.getQueue(message.guild!);
     if (!player)
       return msg.edit(`${client.i18n.get(language, "noplayer", "no_player")}`);
 

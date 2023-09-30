@@ -20,14 +20,14 @@ export default {
     message: Message,
     args: string[],
     language: string,
-    prefix: string
+    prefix: string,
   ) => {
     const value = args[0] ? args[0] : null;
     const number = args[1];
 
     if (number && isNaN(+number))
       return message.channel.send(
-        `${client.i18n.get(language, "music", "number_invalid")}`
+        `${client.i18n.get(language, "music", "number_invalid")}`,
       );
 
     const Plist = value!.replace(/_/g, " ");
@@ -44,11 +44,11 @@ export default {
 
     if (!playlist)
       return message.channel.send(
-        `${client.i18n.get(language, "playlist", "detail_notfound")}`
+        `${client.i18n.get(language, "playlist", "detail_notfound")}`,
       );
     if (playlist.private && playlist.owner !== message.author.id)
       return message.channel.send(
-        `${client.i18n.get(language, "playlist", "detail_private")}`
+        `${client.i18n.get(language, "playlist", "detail_private")}`,
       );
 
     let pagesNum = Math.ceil(playlist.tracks.length / 10);
@@ -65,15 +65,15 @@ export default {
           author: playlists.author,
           duration: formatDuration(playlists.length),
         })}
-                `
+                `,
       );
     }
 
     const totalDuration = formatDuration(
       playlist.tracks.reduce(
         (acc: number, cur: PlaylistTrackInterface) => acc + cur.length!,
-        0
-      )
+        0,
+      ),
     );
 
     const pages = [];
@@ -98,7 +98,7 @@ export default {
               pages: String(pagesNum),
               songs: playlist.tracks.length,
               duration: totalDuration,
-            }
+            },
           )}`,
         });
 
@@ -113,19 +113,19 @@ export default {
           60000,
           playlist.tracks.length,
           Number(totalDuration),
-          language
+          language,
         );
       else return message.channel.send({ embeds: [pages[0]] });
     } else {
       if (isNaN(+number))
         return message.channel.send(
-          `${client.i18n.get(language, "playlist", "detail_notnumber")}`
+          `${client.i18n.get(language, "playlist", "detail_notnumber")}`,
         );
       if (Number(number) > pagesNum)
         return message.channel.send(
           `${client.i18n.get(language, "playlist", "detail_page_notfound", {
             page: String(pagesNum),
-          })}`
+          })}`,
         );
       const pageNum = Number(number) == 0 ? 1 : Number(number) - 1;
       return message.channel.send({ embeds: [pages[pageNum]] });

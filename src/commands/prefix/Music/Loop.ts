@@ -14,10 +14,10 @@ export default {
     message: Message,
     args: string[],
     language: string,
-    prefix: string
+    prefix: string,
   ) => {
     const msg = await message.channel.send(
-      `${client.i18n.get(language, "music", "loop_loading")}`
+      `${client.i18n.get(language, "music", "loop_loading")}`,
     );
     const player = client.manager.getQueue(message.guild!);
     if (!player)
@@ -37,7 +37,7 @@ export default {
       return message.channel.send(
         `${client.i18n.get(language, "music", "loop_invalid", {
           mode: mode_array.join(", "),
-        })}`
+        })}`,
       );
 
     const loop_mode = {
@@ -46,40 +46,38 @@ export default {
       queue: "queue",
     };
 
-    if (mode == "current") 
-    {
+    if (mode == "current") {
       const looped = new EmbedBuilder()
-        .setDescription(
-          `${client.i18n.get(language, "music", "loop_current")}`
-        )
+        .setDescription(`${client.i18n.get(language, "music", "loop_current")}`)
         .setColor(client.color);
 
-      if (player.repeatMode == RepeatMode.SONG) return msg.edit({ content: " ", embeds: [looped] })
-      await player.setRepeatMode(RepeatMode.SONG)
+      if (player.repeatMode == RepeatMode.SONG)
+        return msg.edit({ content: " ", embeds: [looped] });
+      await player.setRepeatMode(RepeatMode.SONG);
       msg.edit({ content: " ", embeds: [looped] });
     }
 
-    if (mode == "queue") 
-    {
+    if (mode == "queue") {
       const looped = new EmbedBuilder()
         .setDescription(`${client.i18n.get(language, "music", "unloop_all")}`)
         .setColor(client.color);
       msg.edit({ content: " ", embeds: [looped] });
 
-      if (player.repeatMode == RepeatMode.DISABLED) return msg.edit({ content: " ", embeds: [looped] })
-      await player.setRepeatMode(RepeatMode.DISABLED)
+      if (player.repeatMode == RepeatMode.DISABLED)
+        return msg.edit({ content: " ", embeds: [looped] });
+      await player.setRepeatMode(RepeatMode.DISABLED);
       msg.edit({ content: " ", embeds: [looped] });
     }
 
-    if (mode == "none") 
-    {
+    if (mode == "none") {
       const looped_queue = new EmbedBuilder()
         .setDescription(`${client.i18n.get(language, "music", "loop_all")}`)
         .setColor(client.color);
       msg.edit({ content: " ", embeds: [looped_queue] });
 
-      if (player.repeatMode == RepeatMode.QUEUE) return msg.edit({ content: " ", embeds: [looped_queue] })
-      await player.setRepeatMode(RepeatMode.QUEUE)
+      if (player.repeatMode == RepeatMode.QUEUE)
+        return msg.edit({ content: " ", embeds: [looped_queue] });
+      await player.setRepeatMode(RepeatMode.QUEUE);
       msg.edit({ content: " ", embeds: [looped_queue] });
     }
   },

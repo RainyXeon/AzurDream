@@ -14,16 +14,16 @@ export default {
     message: Message,
     args: string[],
     language: string,
-    prefix: string
+    prefix: string,
   ) => {
     const msg = await message.channel.send(
-      `${client.i18n.get(language, "music", "volume_loading")}`
+      `${client.i18n.get(language, "music", "volume_loading")}`,
     );
 
     const value = args[0];
     if (value && isNaN(+value))
       return msg.edit(
-        `${client.i18n.get(language, "music", "number_invalid")}`
+        `${client.i18n.get(language, "music", "number_invalid")}`,
       );
 
     const player = client.manager.getQueue(message.guild!);
@@ -40,11 +40,11 @@ export default {
       return msg.edit(
         `${client.i18n.get(language, "music", "volume_usage", {
           volume: String(player.volume),
-        })}`
+        })}`,
       );
     if (Number(value) <= 0 || Number(value) > 100)
       return msg.edit(
-        `${client.i18n.get(language, "music", "volume_invalid")}`
+        `${client.i18n.get(language, "music", "volume_invalid")}`,
       );
 
     await player.setVolume(Number(value));
@@ -53,7 +53,7 @@ export default {
       .setDescription(
         `${client.i18n.get(language, "music", "volume_msg", {
           volume: value,
-        })}`
+        })}`,
       )
       .setColor(client.color);
 

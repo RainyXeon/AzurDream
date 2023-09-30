@@ -17,12 +17,12 @@ export default {
     message: Message,
     args: string[],
     language: string,
-    prefix: string
+    prefix: string,
   ) => {
     const value = args[0] ? args[0] : null;
     if (value == null)
       return message.channel.send(
-        `${client.i18n.get(language, "playlist", "invalid")}`
+        `${client.i18n.get(language, "playlist", "invalid")}`,
       );
     const Plist = value!.replace(/_/g, " ");
 
@@ -38,11 +38,11 @@ export default {
 
     if (!playlist)
       return message.channel.send(
-        `${client.i18n.get(language, "playlist", "delete_notfound")}`
+        `${client.i18n.get(language, "playlist", "delete_notfound")}`,
       );
     if (playlist.owner !== message.author.id)
       return message.channel.send(
-        `${client.i18n.get(language, "playlist", "delete_owner")}`
+        `${client.i18n.get(language, "playlist", "delete_owner")}`,
       );
 
     await client.db.delete(`playlist.${filter_level_1[0]}`);
@@ -50,7 +50,7 @@ export default {
       .setDescription(
         `${client.i18n.get(language, "playlist", "delete_deleted", {
           name: Plist,
-        })}`
+        })}`,
       )
       .setColor(client.color);
     message.channel.send({ embeds: [embed] });

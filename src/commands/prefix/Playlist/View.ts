@@ -17,12 +17,12 @@ export default {
     message: Message,
     args: string[],
     language: string,
-    prefix: string
+    prefix: string,
   ) => {
     const value = args[0] ? args[0] : null;
     if (value == null)
       return message.channel.send(
-        `${client.i18n.get(language, "playlist", "invalid")}`
+        `${client.i18n.get(language, "playlist", "invalid")}`,
       );
     const PName = value!.replace(/_/g, " ");
 
@@ -38,11 +38,11 @@ export default {
 
     if (!playlist)
       return message.channel.send(
-        `${client.i18n.get(language, "playlist", "public_notfound")}`
+        `${client.i18n.get(language, "playlist", "public_notfound")}`,
       );
     if (playlist.owner !== message.author.id)
       return message.channel.send(
-        `${client.i18n.get(language, "playlist", "public_owner")}`
+        `${client.i18n.get(language, "playlist", "public_owner")}`,
       );
 
     const Public = Object.keys(fullList)
@@ -55,27 +55,27 @@ export default {
       });
     if (Public !== null || undefined || false)
       return message.channel.send(
-        `${client.i18n.get(language, "playlist", "public_already")}`
+        `${client.i18n.get(language, "playlist", "public_already")}`,
       );
 
     const msg = await message.channel.send(
-      `${client.i18n.get(language, "playlist", "public_loading")}`
+      `${client.i18n.get(language, "playlist", "public_loading")}`,
     );
 
     client.db.set(
       `playlist.pid_${playlist.id}.private`,
-      playlist.private == true ? false : true
+      playlist.private == true ? false : true,
     );
 
     const playlist_now = await client.db.get(
-      `playlist.pid_${playlist.id}.private`
+      `playlist.pid_${playlist.id}.private`,
     );
 
     const embed = new EmbedBuilder()
       .setDescription(
         `${client.i18n.get(language, "playlist", "public_success", {
           view: playlist_now == true ? "Private" : "Public",
-        })}`
+        })}`,
       )
       .setColor(client.color);
     msg.edit({ content: " ", embeds: [embed] });

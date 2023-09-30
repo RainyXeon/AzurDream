@@ -12,7 +12,7 @@ import { I18n } from "@hammerhq/localization";
 import { resolve } from "path";
 import * as configData from "./plugins/config.js";
 import winstonLogger from "./plugins/logger.js";
-import { DisTube } from "distube";
+import { DisTube, Queue } from "distube";
 import { SpotifyPlugin } from "@distube/spotify";
 import { SoundCloudPlugin } from "@distube/soundcloud";
 import { YtDlpPlugin } from "@distube/yt-dlp";
@@ -46,14 +46,17 @@ export class Manager extends Client {
   sent_queue: Collection<string, any>;
   aliases: Collection<string, any>;
   websocket?: WebSocket;
-  UpdateMusic!: (player: any) => Promise<void | Message<true>>;
-  UpdateQueueMsg!: (player: any) => Promise<void | Message<true>>;
+  // UpdateMusic = end
+  UpdateMusic!: (player: Queue) => Promise<void | Message<true>>;
+  // UpdateQueueMsg = start
+  UpdateQueueMsg!: (player: Queue) => Promise<void | Message<true>>;
   enSwitch!: ActionRowBuilder<ButtonBuilder>;
   diSwitch!: ActionRowBuilder<ButtonBuilder>;
   is_db_connected: boolean;
   ws_message?: Collection<string, any>;
   queue_message: Collection<string, any>;
   query_message: Collection<string, any>;
+  is_using_import: Collection<string, any>;
 
   // Main class
   constructor() {
@@ -103,6 +106,7 @@ export class Manager extends Client {
     this.aliases = new Collection();
     this.queue_message = new Collection();
     this.query_message = new Collection();
+    this.is_using_import = new Collection();
     this.is_db_connected = false;
 
     process.on("unhandledRejection", (error) =>
@@ -136,16 +140,17 @@ export class Manager extends Client {
         dlChunkSize: 1024 * 1024 * 4,
       },
       plugins: [
-        this.config.distube.SPOTIFY.enable ? 
-        new SpotifyPlugin({
-          emitEventsAfterFetching: true,
-          api: {
-            clientId: this.config.distube.SPOTIFY.id,
-            clientSecret: this.config.distube.SPOTIFY.secret,
-          },
-        }) : new SpotifyPlugin({
-          emitEventsAfterFetching: true,
-        }),
+        this.config.distube.SPOTIFY.enable
+          ? new SpotifyPlugin({
+              emitEventsAfterFetching: true,
+              api: {
+                clientId: this.config.distube.SPOTIFY.id,
+                clientSecret: this.config.distube.SPOTIFY.secret,
+              },
+            })
+          : new SpotifyPlugin({
+              emitEventsAfterFetching: true,
+            }),
         new YtDlpPlugin({ update: true }),
         new SoundCloudPlugin(),
         new DeezerPlugin(),

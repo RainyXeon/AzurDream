@@ -14,12 +14,12 @@ export default {
     message: Message,
     args: string[],
     language: string,
-    prefix: string
+    prefix: string,
   ) => {
     const msg = await message.channel.send(
       `${client.i18n.get(language, "filters", "filter_loading", {
         name: "3d",
-      })}`
+      })}`,
     );
 
     const player = client.manager.getQueue(message.guild!);
@@ -32,13 +32,13 @@ export default {
     )
       return msg.edit(`${client.i18n.get(language, "noplayer", "no_voice")}`);
 
-    await player.filters.add("3d")
+    await player.filters.add("3d");
 
     const embed = new EmbedBuilder()
       .setDescription(
         `${client.i18n.get(language, "filters", "filter_on", {
           name: "3d",
-        })}`
+        })}`,
       )
       .setColor(client.color);
 

@@ -32,7 +32,7 @@ detail_notnumber: "หน้าต้องเป็นตัวเลข"
 detail_page_notfound: "มีเพียง %{page} หน้าที่ใช้ได้"
 detail_track: "%{num}. **[%{title}](%{url})** | *ช่อง*: %{author} | `[%{duration}]`"
 ##### Import command #####
-import_loading: "กำลังนำเพิ่ม เพลย์ลิสต์ไปยังคิว..."
+import_loading: "กำลังนำเข้า %{song_num} แทร็กไปยังคิว..."
 import_voice: "คุณต้องอยู่ใน ห้องเสียง เพื่อใช้คำสั่ง"
 import_join: "ฉันไม่ได้รับอนุญาตให้เข้าร่วม ห้องเสียง ของคุณ"
 import_speak: "ฉันไม่ได้รับอนุญาตให้พูดใน ห้องเสียง ของคุณ"
@@ -86,6 +86,8 @@ no_des: "ไม่มีคำบรรยาย"
 
 enabled: "เปิดใช้งาน"
 disabled: "พิการ"
+
+invalid_url: "ไม่ได้ระบุ URL"
 
 ##### Edit command #####
 edit_exist: "ID นี้ถูกใช้แล้ว โปรดลอง ID อื่น"

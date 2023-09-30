@@ -22,7 +22,7 @@ export default {
   run: async (
     interaction: CommandInteraction,
     client: Manager,
-    language: string
+    language: string,
   ) => {
     await interaction.deferReply({ ephemeral: false });
     const input = (
@@ -31,11 +31,11 @@ export default {
 
     if (
       !(interaction.member!.permissions as Readonly<PermissionsBitField>).has(
-        PermissionsBitField.Flags.ManageGuild
+        PermissionsBitField.Flags.ManageGuild,
       )
     )
       return interaction.editReply(
-        `${client.i18n.get(language, "utilities", "lang_perm")}`
+        `${client.i18n.get(language, "utilities", "lang_perm")}`,
       );
     const languages = client.i18n.getLocales();
 
@@ -43,11 +43,11 @@ export default {
       return interaction.editReply(
         `${client.i18n.get(language, "utilities", "provide_lang", {
           languages: languages.join(", "),
-        })}`
+        })}`,
       );
 
     const newLang = await client.db.get(
-      `language.guild_${interaction.guild!.id}`
+      `language.guild_${interaction.guild!.id}`,
     );
 
     if (!newLang) {
@@ -56,7 +56,7 @@ export default {
         .setDescription(
           `${client.i18n.get(language, "utilities", "lang_set", {
             language: String(input),
-          })}`
+          })}`,
         )
         .setColor(client.color);
 
@@ -68,7 +68,7 @@ export default {
         .setDescription(
           `${client.i18n.get(language, "utilities", "lang_change", {
             language: String(input),
-          })}`
+          })}`,
         )
         .setColor(client.color);
 

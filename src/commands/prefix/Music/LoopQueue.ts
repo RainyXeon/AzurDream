@@ -15,7 +15,7 @@ export default {
     message: Message,
     args: string[],
     language: string,
-    prefix: string
+    prefix: string,
   ) => {
     const loop_mode = {
       none: "none",
@@ -24,7 +24,7 @@ export default {
     };
 
     const msg = await message.channel.send(
-      `${client.i18n.get(language, "music", "loopall_loading")}`
+      `${client.i18n.get(language, "music", "loopall_loading")}`,
     );
     const player = client.manager.getQueue(message.guild!);
     if (!player)

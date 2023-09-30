@@ -4,16 +4,20 @@ import {
   Message,
 } from "discord.js";
 import { convertTime } from "../../../structures/ConvertTime.js";
-import { StartQueueDuration } from "../../../structures/QueueDuration.js";
 import { Manager } from "../../../manager.js";
-import { SearchResultPlaylist, Song } from "distube";
-import yts, { PlaylistMetadataResult, VideoMetadataResult, VideoSearchResult } from "yt-search";
+import { Song } from "distube";
+import yts from "yt-search";
 
-const REGEX = /(?:https?:\/\/)?(:www|:music)?youtu(?:\.be\/|be.com\/\S*(?:watch|embed)(?:(?:(?=\/[-a-zA-Z0-9_]{11,}(?!\S))\/)|(?:\S*v=|v\/)))([-a-zA-Z0-9_]{11,})/
-const SHORT_REGEX = /^.*(youtu.be\/|list=)([^#\&\?]*).*/
+const REGEX =
+  /(?:https?:\/\/)?(:www|:music)?youtu(?:\.be\/|be.com\/\S*(?:watch|embed)(?:(?:(?=\/[-a-zA-Z0-9_]{11,}(?!\S))\/)|(?:\S*v=|v\/)))([-a-zA-Z0-9_]{11,})/;
+const SHORT_REGEX = /[?&]list=([^#?&]*)/;
 
-const TrackAdd: any = [];
-let type = "none"
+type YTSearchType =
+  | yts.PlaylistItem
+  | yts.VideoMetadataResult
+  | yts.VideoSearchResult;
+const TrackAdd: YTSearchType[] = [];
+let type = "none";
 
 export default {
   name: "playlist-add",
@@ -27,51 +31,70 @@ export default {
     message: Message,
     args: string[],
     language: string,
-    prefix: string
+    prefix: string,
   ) => {
     const value = args[0] ? args[0] : null;
+    const url_value = args[1] ? args[1] : null;
+
     if (value == null || !value)
       return message.channel.send(
-        `${client.i18n.get(language, "playlist", "invalid")}`
+        `${client.i18n.get(language, "playlist", "invalid")}`,
       );
     const input = args[1];
 
     const PlaylistName = value!.replace(/_/g, " ");
+
     const Inputed = input;
 
+    if (!Inputed)
+      return message.channel.send(
+        `${client.i18n.get(language, "playlist", "invalid_url")}`,
+      );
+
     const msg = await message.channel.send(
-      `${client.i18n.get(language, "playlist", "add_loading")}`
+      `${client.i18n.get(language, "playlist", "add_loading")}`,
     );
 
-    let result
+    let result = [];
 
-    const playlist_info = SHORT_REGEX.exec(value)
-    const video_info = REGEX.exec(value)
+    const playlist_info = SHORT_REGEX.exec(String(url_value));
+    const video_info = REGEX.exec(String(url_value));
 
     if (playlist_info && !video_info) {
-      const rex_id = SHORT_REGEX.exec(value)
-      result = (await yts({ listId: rex_id![2] }))
+      const rex_id = SHORT_REGEX.exec(String(url_value));
+      const res = (await yts({ listId: rex_id![1] })).videos;
+      result.push(...res);
     } else if (video_info) {
-      const rex_id = REGEX.exec(value)
-      result = await yts({ videoId: rex_id![2] })
+      const rex_id = REGEX.exec(String(url_value));
+      const res = await yts({ videoId: rex_id![2] });
+      result.push(res);
     } else {
-      result = [(await yts(value)).videos[0]]
+      const res = (await yts(String(url_value))).videos[0];
+      result.push(res);
     }
 
-    const tracks = (result as PlaylistMetadataResult).videos ? (result as PlaylistMetadataResult).videos : [result]
+    const tracks = result;
 
     if (!tracks.length)
       return msg.edit({
         content: `${client.i18n.get(language, "music", "add_match")}`,
       });
-    if (tracks.length > 1)
-      for (let track of tracks) TrackAdd.push(track);
+    if (tracks.length > 1) for (let track of tracks) TrackAdd.push(track);
     else TrackAdd.push(tracks[0]);
 
-    const Duration = convertTime(tracks[0].duration);
+    const Duration = convertTime(tracks[0].duration.seconds);
+
+    function StartQueueDuration(tracks: YTSearchType[]) {
+      const current = tracks[0].duration.seconds ?? 0;
+      return tracks.reduce(
+        (acc, cur) => acc + (cur.duration.seconds || 0),
+        current,
+      );
+    }
+
     const TotalDuration = StartQueueDuration(tracks);
 
-    if (result.type === "PLAYLIST") {
+    if (playlist_info !== null) {
       const embed = new EmbedBuilder()
         .setDescription(
           `${client.i18n.get(language, "playlist", "add_playlist", {
@@ -80,31 +103,31 @@ export default {
             duration: convertTime(TotalDuration),
             track: String(tracks.length),
             user: String(message.author),
-          })}`
+          })}`,
         )
         .setColor(client.color);
       msg.edit({ content: " ", embeds: [embed] });
-    } else if (result.type === "TRACK") {
+    } else if (video_info !== null) {
       const embed = new EmbedBuilder()
         .setDescription(
           `${client.i18n.get(language, "playlist", "add_track", {
             title: tracks[0].title,
-            url: tracks[0].uri,
+            url: `https://www.youtube.com/watch?v=${tracks[0].videoId}`,
             duration: Duration,
             user: String(message.author),
-          })}`
+          })}`,
         )
         .setColor(client.color);
       msg.edit({ content: " ", embeds: [embed] });
-    } else if (result.type === "SEARCH") {
+    } else if (!video_info && !playlist_info && result) {
       const embed = new EmbedBuilder()
         .setDescription(
           `${client.i18n.get(language, "playlist", "add_search", {
             title: tracks[0].title,
-            url: tracks[0].uri,
+            url: `https://www.youtube.com/watch?v=${tracks[0].videoId}`,
             duration: Duration,
             user: String(message.author),
-          })}`
+          })}`,
         )
         .setColor(client.color);
       msg.edit({ content: " ", embeds: [embed] });
@@ -124,9 +147,14 @@ export default {
 
     const playlist = fullList[pid[0]];
 
+    if (playlist == null || !playlist)
+      return message.channel.send(
+        `${client.i18n.get(language, "playlist", "invalid")}`,
+      );
+
     if (playlist.owner !== message.author.id) {
       message.channel.send(
-        `${client.i18n.get(language, "playlist", "add_owner")}`
+        `${client.i18n.get(language, "playlist", "add_owner")}`,
       );
       TrackAdd.length = 0;
       return;
@@ -137,7 +165,7 @@ export default {
       message.channel.send(
         `${client.i18n.get(language, "playlist", "add_limit_track", {
           limit: client.config.bot.LIMIT_TRACK,
-        })}`
+        })}`,
       );
       TrackAdd.length = 0;
       return;
@@ -146,11 +174,11 @@ export default {
     TrackAdd.forEach(async (track) => {
       await client.db.push(`playlist.${pid[0]}.tracks`, {
         title: track.title,
-        uri: track.uri,
-        length: track.length,
+        uri: `https://www.youtube.com/watch?v=${tracks[0].videoId}`,
+        length: track.duration.seconds,
         thumbnail: track.thumbnail,
-        author: track.author,
-        requester: track.requester, // Just case can push
+        author: track.author.name,
+        requester: message.author!.id, // Just case can push
       });
     });
 
@@ -159,7 +187,7 @@ export default {
         `${client.i18n.get(language, "playlist", "add_added", {
           count: String(TrackAdd.length),
           playlist: PlaylistName,
-        })}`
+        })}`,
       )
       .setColor(client.color);
 

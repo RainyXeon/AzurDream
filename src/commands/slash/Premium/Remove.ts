@@ -28,7 +28,7 @@ export default {
   run: async (
     interaction: CommandInteraction,
     client: Manager,
-    language: string
+    language: string,
   ) => {
     let db;
 
@@ -49,7 +49,7 @@ export default {
         content: `${client.i18n.get(
           language,
           "premium",
-          "remove_only_params"
+          "remove_only_params",
         )}`,
       });
     if (id && !mentions) db = await client.db.get(`premium.user_${id}`);
@@ -80,7 +80,7 @@ export default {
         .setDescription(
           `${client.i18n.get(language, "premium", "remove_desc", {
             user: String(mentions),
-          })}`
+          })}`,
         )
         .setColor(client.color);
 
@@ -90,7 +90,7 @@ export default {
         .setDescription(
           `${client.i18n.get(language, "premium", "remove_already", {
             user: String(mentions),
-          })}`
+          })}`,
         )
         .setColor(client.color);
 

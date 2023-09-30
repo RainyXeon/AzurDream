@@ -17,18 +17,18 @@ export default {
     message: Message,
     args: string[],
     language: string,
-    prefix: string
+    prefix: string,
   ) => {
     const value = args[0] ? args[0] : null;
     const pos = args[1];
     if (value == null)
       return message.channel.send(
-        `${client.i18n.get(language, "playlist", "invalid")}`
+        `${client.i18n.get(language, "playlist", "invalid")}`,
       );
 
     if (pos && isNaN(+pos))
       return message.channel.send(
-        `${client.i18n.get(language, "music", "number_invalid")}`
+        `${client.i18n.get(language, "music", "number_invalid")}`,
       );
 
     const Plist = value!.replace(/_/g, " ");
@@ -43,29 +43,29 @@ export default {
     const playlist = fullList[pid[0]];
     if (!playlist)
       return message.channel.send(
-        `${client.i18n.get(language, "playlist", "remove_notfound")}`
+        `${client.i18n.get(language, "playlist", "remove_notfound")}`,
       );
     if (playlist.owner !== message.author.id)
       return message.channel.send(
-        `${client.i18n.get(language, "playlist", "remove_owner")}`
+        `${client.i18n.get(language, "playlist", "remove_owner")}`,
       );
 
     const position = pos;
     const song = playlist.tracks[Number(position) - 1];
     if (!song)
       return message.channel.send(
-        `${client.i18n.get(language, "playlist", "remove_song_notfound")}`
+        `${client.i18n.get(language, "playlist", "remove_song_notfound")}`,
       );
     await client.db.pull(
       `playlist.${pid[0]}.tracks`,
-      playlist.tracks[Number(position) - 1]
+      playlist.tracks[Number(position) - 1],
     );
     const embed = new EmbedBuilder()
       .setDescription(
         `${client.i18n.get(language, "playlist", "remove_removed", {
           name: Plist,
           position: pos,
-        })}`
+        })}`,
       )
       .setColor(client.color);
     message.channel.send({ embeds: [embed] });

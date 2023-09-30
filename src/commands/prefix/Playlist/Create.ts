@@ -18,28 +18,28 @@ export default {
     message: Message,
     args: string[],
     language: string,
-    prefix: string
+    prefix: string,
   ) => {
     const value = args[0];
     const des = args[1];
 
     if (value == null || !value)
       return message.channel.send(
-        `${client.i18n.get(language, "playlist", "invalid")}`
+        `${client.i18n.get(language, "playlist", "invalid")}`,
       );
 
     if (value.length > 16)
       return message.channel.send(
-        `${client.i18n.get(language, "playlist", "create_toolong")}`
+        `${client.i18n.get(language, "playlist", "create_toolong")}`,
       );
     if (des && des.length > 1000)
       return message.channel.send(
-        `${client.i18n.get(language, "playlist", "des_toolong")}`
+        `${client.i18n.get(language, "playlist", "des_toolong")}`,
       );
 
     const PlaylistName = value.replace(/_/g, " ");
     const msg = await message.channel.send(
-      `${client.i18n.get(language, "playlist", "create_loading")}`
+      `${client.i18n.get(language, "playlist", "create_loading")}`,
     );
 
     const fullList = await client.db.get("playlist");
@@ -75,7 +75,7 @@ export default {
       msg.edit(
         `${client.i18n.get(language, "playlist", "create_limit_playlist", {
           limit: client.config.bot.LIMIT_PLAYLIST,
-        })}`
+        })}`,
       );
       return;
     }
@@ -96,7 +96,7 @@ export default {
       .setDescription(
         `${client.i18n.get(language, "playlist", "create_created", {
           playlist: PlaylistName,
-        })}`
+        })}`,
       )
       .setColor(client.color);
     msg.edit({ content: " ", embeds: [embed] });

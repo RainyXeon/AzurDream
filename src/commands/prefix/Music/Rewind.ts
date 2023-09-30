@@ -15,16 +15,16 @@ export default {
     message: Message,
     args: string[],
     language: string,
-    prefix: string
+    prefix: string,
   ) => {
     const msg = await message.channel.send(
-      `${client.i18n.get(language, "music", "rewind_loading")}`
+      `${client.i18n.get(language, "music", "rewind_loading")}`,
     );
     const value = args[0];
 
     if (value && isNaN(+value))
       return msg.edit(
-        `${client.i18n.get(language, "music", "number_invalid")}`
+        `${client.i18n.get(language, "music", "number_invalid")}`,
       );
 
     const player = client.manager.getQueue(message.guild!);
@@ -42,46 +42,46 @@ export default {
 
     if (value && !isNaN(+value)) {
       if (song_position - Number(value) > 0) {
-        await player.seek(song_position - Number(value))
+        await player.seek(song_position - Number(value));
 
         const rewind1 = new EmbedBuilder()
           .setDescription(
             `${client.i18n.get(language, "music", "rewind_msg", {
               duration: CurrentDuration,
-            })}`
+            })}`,
           )
           .setColor(client.color);
 
         msg.edit({ content: " ", embeds: [rewind1] });
       } else {
         return msg.edit(
-          `${client.i18n.get(language, "music", "rewind_beyond")}`
+          `${client.i18n.get(language, "music", "rewind_beyond")}`,
         );
       }
     } else if (value && isNaN(+value)) {
       return msg.edit(
         `${client.i18n.get(language, "music", "rewind_invalid", {
           prefix: prefix,
-        })}`
+        })}`,
       );
     }
 
     if (!value) {
       if (song_position - rewindNum > 0) {
-        await player.seek(song_position - rewindNum)
+        await player.seek(song_position - rewindNum);
 
         const rewind2 = new EmbedBuilder()
           .setDescription(
             `${client.i18n.get(language, "music", "rewind_msg", {
               duration: CurrentDuration,
-            })}`
+            })}`,
           )
           .setColor(client.color);
 
         msg.edit({ content: " ", embeds: [rewind2] });
       } else {
         return msg.edit(
-          `${client.i18n.get(language, "music", "rewind_beyond")}`
+          `${client.i18n.get(language, "music", "rewind_beyond")}`,
         );
       }
     }

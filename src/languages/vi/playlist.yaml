@@ -31,7 +31,7 @@ detail_notnumber: "Số trang cần phải là một số."
 detail_page_notfound: "Hiện chỉ có %{page} có sẵn."
 detail_track: "%{num}. **[%{title}](%{url})** | *Tác giả*: %{author} | `[%{duration}]`"
 ##### Import command #####
-import_loading: "Đang nhập danh sách phát vào hàng đợi..."
+import_loading: "Đang nhập %{song_num} bài nhạc vào hàng đợi..."
 import_voice: "Bạn phải cần ở trong kênh đàm thoại để sử dụng lệnh này."
 import_join: "Tôi không có quyền để tham gia kênh đàm thoại."
 import_speak: "Tôi không có quyền để nói trong kênh đàm thoại."
@@ -86,6 +86,8 @@ invalid: "Tên hoặc id bạn vừa cung cấp không hặp lệ"
 
 enabled: "Đã kích hoạt"
 disabled: "Chưa kích hoạt"
+
+invalid_url: "Không có url nào được cung cấp"
 
 ##### Edit command #####
 edit_exist: "ID này đã được sử dụng, vui lòng thử một ID khác."

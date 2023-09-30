@@ -48,7 +48,7 @@ export default {
   run: async (
     interaction: CommandInteraction,
     client: Manager,
-    language: string
+    language: string,
   ) => {
     await interaction.deferReply({ ephemeral: false });
 
@@ -103,7 +103,7 @@ export default {
           codes: codes.join("\n"),
           plan: String(plan),
           expires: moment(time).format("dddd, MMMM Do YYYY"),
-        })}`
+        })}`,
       )
       .setTimestamp()
       .setFooter({

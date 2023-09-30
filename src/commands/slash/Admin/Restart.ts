@@ -9,7 +9,7 @@ export default {
   run: async (
     interaction: CommandInteraction,
     client: Manager,
-    language: string
+    language: string,
   ) => {
     await interaction.deferReply({ ephemeral: false });
 
@@ -20,7 +20,7 @@ export default {
 
     const restart = new EmbedBuilder()
       .setDescription(
-        `${client.i18n.get(language, "utilities", "restart_msg")}`
+        `${client.i18n.get(language, "utilities", "restart_msg")}`,
       )
       .setColor(client.color)
       .setFooter({

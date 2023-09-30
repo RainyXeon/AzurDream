@@ -13,10 +13,10 @@ export default {
     message: Message,
     args: string[],
     language: string,
-    prefix: string
+    prefix: string,
   ) => {
     const msg = await message.channel.send(
-      `${client.i18n.get(language, "music", "pause_loading")}`
+      `${client.i18n.get(language, "music", "pause_loading")}`,
     );
     const player = client.manager.getQueue(message.guild!);
 
@@ -37,14 +37,14 @@ export default {
         JSON.stringify({
           op: "pause_track",
           guild: message.guild!.id,
-        })
+        }),
       );
 
     const embed = new EmbedBuilder()
       .setDescription(
         `${client.i18n.get(language, "music", "pause_msg", {
           pause: `${client.i18n.get(language, "music", "pause_switch_pause")}`,
-        })}`
+        })}`,
       )
       .setColor(client.color);
 

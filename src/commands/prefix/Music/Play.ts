@@ -129,22 +129,6 @@ export default {
     )
       return msg.edit(`${client.i18n.get(language, "music", "play_speak")}`);
 
-    let res_info;
-
-    const playlist_info = SHORT_REGEX.exec(value);
-    const video_info = REGEX.exec(value);
-
-    if (playlist_info && !video_info) {
-      const rex_id = SHORT_REGEX.exec(value);
-      res_info = await yts({ listId: rex_id![2] });
-    } else if (video_info) {
-      const rex_id = REGEX.exec(value);
-      console.log(rex_id);
-      res_info = await yts({ videoId: rex_id![2] });
-    } else {
-      res_info = await client.manager.search(value);
-    }
-
     await client.manager.play(
       message.member!.voice.channel as VoiceBasedChannel,
       value,
@@ -156,6 +140,5 @@ export default {
     );
 
     await message.delete();
-
   },
 };

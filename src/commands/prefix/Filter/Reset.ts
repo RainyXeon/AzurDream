@@ -14,10 +14,10 @@ export default {
     message: Message,
     args: string[],
     language: string,
-    prefix: string
+    prefix: string,
   ) => {
     const msg = await message.channel.send(
-      `${client.i18n.get(language, "filters", "reset_loading")}`
+      `${client.i18n.get(language, "filters", "reset_loading")}`,
     );
 
     const player = client.manager.getQueue(message.guild!);
@@ -31,7 +31,7 @@ export default {
       return msg.edit(`${client.i18n.get(language, "noplayer", "no_voice")}`);
 
     player.filters.clear();
-    player.setVolume(100)
+    player.setVolume(100);
 
     const resetted = new EmbedBuilder()
       .setDescription(`${client.i18n.get(language, "filters", "reset_on")}`)

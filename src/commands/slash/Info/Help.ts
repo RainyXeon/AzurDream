@@ -18,7 +18,7 @@ export default {
   run: async (
     interaction: CommandInteraction,
     client: Manager,
-    language: string
+    language: string,
   ) => {
     await interaction.deferReply({ ephemeral: false });
 
@@ -51,7 +51,7 @@ export default {
             ${client.i18n.get(language, "help", "lavalink", {
               aver: "v3.0-beta",
             })}
-            `
+            `,
       )
       .setThumbnail(client.user!.displayAvatarURL({ size: 2048 }))
       .setColor(client.color);
@@ -60,7 +60,7 @@ export default {
       new StringSelectMenuBuilder()
         .setCustomId("help-category")
         .setPlaceholder(
-          `${client.i18n.get(language, "utilities", "help_desc")}`
+          `${client.i18n.get(language, "utilities", "help_desc")}`,
         )
         .setMaxValues(1)
         .setMinValues(1)
@@ -70,7 +70,7 @@ export default {
             return new StringSelectMenuOptionBuilder()
               .setLabel(category)
               .setValue(category);
-          })
+          }),
         ),
     ]);
 
@@ -130,7 +130,7 @@ export default {
               .setDescription(
                 `${client.i18n.get(language, "utilities", "help_timeout", {
                   prefix: "/",
-                })}`
+                })}`,
               )
               .setColor(client.color);
 

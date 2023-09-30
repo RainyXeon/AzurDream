@@ -14,10 +14,10 @@ export default {
     message: Message,
     args: string[],
     language: string,
-    prefix: string
+    prefix: string,
   ) => {
     const msg = await message.channel.send(
-      `${client.i18n.get(language, "music", "previous_loading")}`
+      `${client.i18n.get(language, "music", "previous_loading")}`,
     );
 
     const player = client.manager.getQueue(message.guild!);
@@ -30,7 +30,7 @@ export default {
     )
       return msg.edit(`${client.i18n.get(language, "noplayer", "no_voice")}`);
 
-      await client.manager.previous(message);
+    await client.manager.previous(message);
 
     const embed = new EmbedBuilder()
       .setDescription(`${client.i18n.get(language, "music", "previous_msg")}`)

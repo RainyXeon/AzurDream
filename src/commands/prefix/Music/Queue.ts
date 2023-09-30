@@ -16,19 +16,19 @@ export default {
     message: Message,
     args: string[],
     language: string,
-    prefix: string
+    prefix: string,
   ) => {
     const value = args[0];
 
     if (value && isNaN(+value))
       return message.channel.send(
-        `${client.i18n.get(language, "music", "number_invalid")}`
+        `${client.i18n.get(language, "music", "number_invalid")}`,
       );
 
     const player = client.manager.getQueue(message.guild!);
     if (!player)
       return message.channel.send(
-        `${client.i18n.get(language, "noplayer", "no_player")}`
+        `${client.i18n.get(language, "noplayer", "no_player")}`,
       );
     const { channel } = message.member!.voice;
     if (
@@ -36,15 +36,13 @@ export default {
       message.member!.voice.channel !== message.guild!.members.me!.voice.channel
     )
       return message.channel.send(
-        `${client.i18n.get(language, "noplayer", "no_voice")}`
+        `${client.i18n.get(language, "noplayer", "no_voice")}`,
       );
 
     const song = player.songs[0];
 
     const qduration = `${formatDuration(player.duration)}`;
-    const thumbnail = `https://img.youtube.com/vi/${
-      song!.id
-    }/hqdefault.jpg`;
+    const thumbnail = `https://img.youtube.com/vi/${song!.id}/hqdefault.jpg`;
 
     let pagesNum = Math.ceil(player.songs.length / 10);
     if (pagesNum === 0) pagesNum = 1;
@@ -54,9 +52,9 @@ export default {
       const song = player.songs[i];
       songStrings.push(
         `**${i + 1}.** [${song.name}](${song.url}) \`[${formatDuration(
-          song.duration
+          song.duration,
         )}]\`
-                    `
+                    `,
       );
     }
 
@@ -80,7 +78,7 @@ export default {
             request: String(song!.member),
             duration: formatDuration(song!.duration),
             rest: str == "" ? "  Nothing" : "\n" + str,
-          })}`
+          })}`,
         )
         .setFooter({
           text: `${client.i18n.get(language, "music", "queue_footer", {
@@ -103,19 +101,19 @@ export default {
           60000,
           player.songs.length,
           Number(qduration),
-          language
+          language,
         );
       else return message.channel.send({ embeds: [pages[0]] });
     } else {
       if (isNaN(+value))
         return message.channel.send(
-          `${client.i18n.get(language, "music", "queue_notnumber")}`
+          `${client.i18n.get(language, "music", "queue_notnumber")}`,
         );
       if (Number(value) > pagesNum)
         return message.channel.send(
           `${client.i18n.get(language, "music", "queue_page_notfound", {
             page: String(pagesNum),
-          })}`
+          })}`,
         );
       const pageNum = Number(value) == 0 ? 1 : Number(value) - 1;
       return message.channel.send({ embeds: [pages[pageNum]] });

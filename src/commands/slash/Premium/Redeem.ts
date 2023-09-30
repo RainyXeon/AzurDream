@@ -22,7 +22,7 @@ export default {
   run: async (
     interaction: CommandInteraction,
     client: Manager,
-    language: string
+    language: string,
   ) => {
     await interaction.deferReply({ ephemeral: false });
 
@@ -36,7 +36,7 @@ export default {
       const embed = new EmbedBuilder()
         .setColor(client.color)
         .setDescription(
-          `${client.i18n.get(language, "premium", "redeem_already")}`
+          `${client.i18n.get(language, "premium", "redeem_already")}`,
         );
       return interaction.editReply({ embeds: [embed] });
     }
@@ -45,12 +45,12 @@ export default {
 
     if (input == "pmc_thedreamvastghost")
       return interaction.editReply(
-        "WU9VIENBTidUIERPIFRISVMgRk9SIEZSRUUgUFJFTUlVTQotIFJhaW55WGVvbiAt"
+        "WU9VIENBTidUIERPIFRISVMgRk9SIEZSRUUgUFJFTUlVTQotIFJhaW55WGVvbiAt",
       );
 
     if (premium) {
       const expires = moment(premium.expiresAt).format(
-        "do/MMMM/YYYY (HH:mm:ss)"
+        "do/MMMM/YYYY (HH:mm:ss)",
       );
       const embed = new EmbedBuilder()
         .setAuthor({
@@ -61,7 +61,7 @@ export default {
           `${client.i18n.get(language, "premium", "redeem_desc", {
             expires: expires,
             plan: premium.plan,
-          })}`
+          })}`,
         )
         .setColor(client.color)
         .setTimestamp();
@@ -83,7 +83,7 @@ export default {
       const embed = new EmbedBuilder()
         .setColor(client.color)
         .setDescription(
-          `${client.i18n.get(language, "premium", "redeem_invalid")}`
+          `${client.i18n.get(language, "premium", "redeem_invalid")}`,
         );
       return interaction.editReply({ embeds: [embed] });
     }

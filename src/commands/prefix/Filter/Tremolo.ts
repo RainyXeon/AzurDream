@@ -14,12 +14,12 @@ export default {
     message: Message,
     args: string[],
     language: string,
-    prefix: string
+    prefix: string,
   ) => {
     const msg = await message.channel.send(
       `${client.i18n.get(language, "filters", "filter_loading", {
         name: "tremolo",
-      })}`
+      })}`,
     );
 
     const player = client.manager.getQueue(message.guild!);
@@ -38,7 +38,7 @@ export default {
       .setDescription(
         `${client.i18n.get(language, "filters", "filter_on", {
           name: "tremolo",
-        })}`
+        })}`,
       )
       .setColor(client.color);
 

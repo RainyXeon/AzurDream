@@ -15,10 +15,10 @@ export default {
     message: Message,
     args: string[],
     language: string,
-    prefix: string
+    prefix: string,
   ) => {
     const msg = await message.channel.send(
-      `${client.i18n.get(language, "music", "lyrics_loading")}`
+      `${client.i18n.get(language, "music", "lyrics_loading")}`,
     );
     const value = args[0];
 
@@ -40,19 +40,19 @@ export default {
     let lyrics = null;
 
     const fetch_lyrics = await axios.get(
-      `https://api.popcat.xyz/lyrics?song=${song!.replace(/ /g, "+")}`
+      `https://api.popcat.xyz/lyrics?song=${song!.replace(/ /g, "+")}`,
     );
 
     try {
       lyrics = fetch_lyrics.data.lyrics;
       if (!lyrics)
         return msg.edit(
-          `${client.i18n.get(language, "music", "lyrics_notfound")}`
+          `${client.i18n.get(language, "music", "lyrics_notfound")}`,
         );
     } catch (err) {
       client.logger.log({ level: "error", message: err });
       return msg.edit(
-        `${client.i18n.get(language, "music", "lyrics_notfound")}`
+        `${client.i18n.get(language, "music", "lyrics_notfound")}`,
       );
     }
     let lyricsEmbed = new EmbedBuilder()
@@ -60,7 +60,7 @@ export default {
       .setTitle(
         `${client.i18n.get(language, "music", "lyrics_title", {
           song: song,
-        })}`
+        })}`,
       )
       .setDescription(`${lyrics}`)
       .setFooter({ text: `Requested by ${message.author.username}` })
@@ -68,7 +68,7 @@ export default {
 
     if (lyrics.length > 2048) {
       lyricsEmbed.setDescription(
-        `${client.i18n.get(language, "music", "lyrics_toolong")}`
+        `${client.i18n.get(language, "music", "lyrics_toolong")}`,
       );
     }
 

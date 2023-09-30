@@ -16,7 +16,7 @@ export default {
     message: Message,
     args: string[],
     language: string,
-    prefix: string
+    prefix: string,
   ) => {
     let value;
     const time = args[0];
@@ -24,7 +24,7 @@ export default {
     console.log(time_regex.test(time), time.split(/:/));
     if (!time_regex.test(time))
       return message.channel.send(
-        `${client.i18n.get(language, "music", "seek_invalid")}`
+        `${client.i18n.get(language, "music", "seek_invalid")}`,
       );
     else {
       const [m, s] = time.split(/:/);
@@ -35,7 +35,7 @@ export default {
     }
 
     const msg = await message.channel.send(
-      `${client.i18n.get(language, "music", "seek_loading")}`
+      `${client.i18n.get(language, "music", "seek_loading")}`,
     );
 
     const player = client.manager.getQueue(message.guild!.id);
@@ -65,7 +65,7 @@ export default {
       .setDescription(
         `${client.i18n.get(language, "music", "seek_msg", {
           duration: Duration,
-        })}`
+        })}`,
       )
       .setColor(client.color);
 

@@ -1,62 +1,49 @@
 import {
   EmbedBuilder,
-  ApplicationCommandOptionType,
   PermissionsBitField,
   ChannelType,
   version,
-  CommandInteraction,
-  CommandInteractionOptionResolver,
+  Message,
   TextChannel,
 } from "discord.js";
 import ms from "pretty-ms";
 import { Manager } from "../../../manager.js";
 
 export default {
-  name: ["settings", "status"],
+  name: "status-channel",
   description: "Create bot status channel",
   category: "Utils",
-  options: [
-    {
-      name: "type",
-      description: "Type of channel",
-      type: ApplicationCommandOptionType.String,
-      required: true,
-      choices: [
-        {
-          name: "Create",
-          value: "create",
-        },
-        {
-          name: "Delete",
-          value: "delete",
-        },
-      ],
-    },
-  ],
+  aliases: ["sc"],
+  usage: "<create or delete>",
+
   run: async (
-    interaction: CommandInteraction,
     client: Manager,
+    message: Message,
+    args: string[],
     language: string,
+    prefix: string,
   ) => {
-    await interaction.deferReply({ ephemeral: false });
-    if (
-      !(interaction.member!.permissions as Readonly<PermissionsBitField>).has(
-        PermissionsBitField.Flags.ManageGuild,
-      )
-    )
-      return interaction.editReply(
+    let option = ["create", "delete"];
+    if (!message.member!.permissions.has(PermissionsBitField.Flags.ManageGuild))
+      return message.channel.send(
         `${client.i18n.get(language, "utilities", "lang_perm")}`,
       );
-    if (
-      (interaction.options as CommandInteractionOptionResolver).getString(
-        "type",
-      ) === "create"
-    ) {
-      const parent = await interaction.guild!.channels.create({
+    if (!args[0] || !option.includes(args[0]))
+      return message.channel.send(
+        `${client.i18n.get(language, "utilities", "arg_error", {
+          text: "(create or delete)",
+        })}`,
+      );
+
+    const choose = args[0];
+
+    if (choose === "create") {
+      const parent = await message.guild!.channels.create({
         name: `${client.user!.username} Status`,
         type: ChannelType.GuildCategory,
       });
-      const textChannel = await interaction.guild!.channels.create({
+
+      const textChannel = await message.guild!.channels.create({
         name: "bot-status",
         type: ChannelType.GuildText,
         parent: parent.id,
@@ -67,7 +54,7 @@ export default {
         .addFields([
           {
             name: "Uptime",
-            value: `\`\`\`${ms(client.uptime as number)}\`\`\``,
+            value: `\`\`\`${ms(client.uptime!)}\`\`\``,
             inline: true,
           },
           {
@@ -108,35 +95,36 @@ export default {
         ])
         .setTimestamp()
         .setColor(client.color);
-
       const channel_msg = await textChannel.send({
         content: ``,
         embeds: [info],
       });
 
-      const data = {
-        guild: interaction.guild!.id,
+      const new_data = {
+        guild: message.guild!.id,
         enable: true,
         channel: textChannel.id,
         statmsg: channel_msg.id,
         category: parent.id,
       };
-      await client.db.set(`status.guild_${interaction.guild!.id}`, data);
+
+      await client.db.set(`setup.guild_${message.guild!.id}`, new_data);
 
       const interval_info = await client.interval.get("MAIN");
 
       if (!interval_info) {
         const interval_online = setInterval(async () => {
           const SetupChannel = await client.db.get(
-            `status.guild_${interaction.guild!.id}.enable`,
+            `setup.guild_${message.guild!.id}.enable`,
           );
           if (!SetupChannel) return;
+
           const fetched_info = new EmbedBuilder()
             .setTitle(client.user!.tag + " Status")
             .addFields([
               {
                 name: "Uptime",
-                value: `\`\`\`${ms(client.uptime as number)}\`\`\``,
+                value: `\`\`\`${ms(client.uptime!)}\`\`\``,
                 inline: true,
               },
               {
@@ -201,20 +189,16 @@ export default {
       const embed = new EmbedBuilder()
         .setDescription(
           `${client.i18n.get(language, "setup", "setup_msg", {
-            channel: String(textChannel),
+            channel: textChannel.name,
           })}`,
         )
         .setColor(client.color);
-      return interaction.followUp({ embeds: [embed] });
+      return message.channel.send({ embeds: [embed] });
     }
 
-    if (
-      (interaction.options as CommandInteractionOptionResolver).getString(
-        "type",
-      ) === "delete"
-    ) {
+    if (choose === "delete") {
       const SetupChannel = await client.db.get(
-        `status.guild_${interaction.guild!.id}`,
+        `setup.guild_${message.guild!.id}`,
       );
 
       const embed_none = new EmbedBuilder()
@@ -225,40 +209,36 @@ export default {
         )
         .setColor(client.color);
 
-      if (!SetupChannel) return interaction.editReply({ embeds: [embed_none] });
+      if (!SetupChannel) return message.channel.send({ embeds: [embed_none] });
 
-      const fetchedTextChannel = interaction.guild!.channels.cache.get(
+      const fetchedTextChannel = message.guild!.channels.cache.get(
         SetupChannel.channel,
       );
-      const fetchedCategory = interaction.guild!.channels.cache.get(
+      const fetchedCategory = message.guild!.channels.cache.get(
         SetupChannel.category,
       );
 
       const embed = new EmbedBuilder()
         .setDescription(
           `${client.i18n.get(language, "setup", "setup_deleted", {
-            channel: String(fetchedTextChannel),
+            channel: fetchedTextChannel!.name,
           })}`,
         )
         .setColor(client.color);
-
-      await interaction.editReply({ embeds: [embed] });
+      await message.channel.send({ embeds: [embed] });
 
       if (fetchedTextChannel) await fetchedTextChannel.delete();
       if (fetchedCategory) await fetchedCategory.delete();
 
       const deleted_data = {
-        guild: interaction.guild!.id,
+        guild: message.guild!.id,
         enable: false,
         channel: "",
         statmsg: "",
         category: "",
       };
 
-      return client.db.set(
-        `status.guild_${interaction.guild!.id}`,
-        deleted_data,
-      );
+      await client.db.set(`setup.guild_${message.guild!.id}`, deleted_data);
     }
   },
 };

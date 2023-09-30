@@ -32,20 +32,20 @@ export default {
   run: async (
     interaction: CommandInteraction,
     client: Manager,
-    language: string
+    language: string,
   ) => {
     await interaction.deferReply({ ephemeral: false });
     if (
       !(interaction.member!.permissions as Readonly<PermissionsBitField>).has(
-        PermissionsBitField.Flags.ManageGuild
+        PermissionsBitField.Flags.ManageGuild,
       )
     )
       return interaction.editReply(
-        `${client.i18n.get(language, "utilities", "lang_perm")}`
+        `${client.i18n.get(language, "utilities", "lang_perm")}`,
       );
     if (
       (interaction.options as CommandInteractionOptionResolver).getString(
-        "type"
+        "type",
       ) === "enable"
     ) {
       await client.db.set(`control.guild_${interaction.guild!.id}`, "enable");
@@ -54,14 +54,14 @@ export default {
         .setDescription(
           `${client.i18n.get(language, "utilities", "control_set", {
             toggle: `${client.i18n.get(language, "music", "enabled")}`,
-          })}`
+          })}`,
         )
         .setColor(client.color);
 
       return interaction.editReply({ embeds: [embed] });
     } else if (
       (interaction.options as CommandInteractionOptionResolver).getString(
-        "type"
+        "type",
       ) === "disable"
     ) {
       await client.db.set(`control.guild_${interaction.guild!.id}`, "enable");
@@ -69,7 +69,7 @@ export default {
         .setDescription(
           `${client.i18n.get(language, "utilities", "control_set", {
             toggle: `${client.i18n.get(language, "music", "disabled")}`,
-          })}`
+          })}`,
         )
         .setColor(client.color);
 

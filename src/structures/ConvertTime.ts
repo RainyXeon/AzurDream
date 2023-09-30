@@ -1,18 +1,16 @@
-function convertTime(duration: number) {
-  var milliseconds = parseInt(`${(duration % 1000) / 100}`),
-    seconds: string | number = parseInt(`${(duration / 1000) % 60}`),
-    minutes: string | number = parseInt(`${(duration / (1000 * 60)) % 60}`),
-    hours: string | number = parseInt(`${(duration / (1000 * 60 * 60)) % 24}`);
+function convertTime(numberSecondValue: number): string {
+  // Convert the number of seconds to hours, minutes, and seconds.
+  const hours = Math.floor(numberSecondValue / 3600);
+  const minutes = Math.floor((numberSecondValue % 3600) / 60);
+  const seconds = numberSecondValue % 60;
 
-  hours = hours < 10 ? "0" + hours : hours;
-  minutes = minutes < 10 ? "0" + minutes : minutes;
-  seconds = seconds < 10 ? "0" + seconds : seconds;
+  // Pad the hours, minutes, and seconds with zeros so that they are all two digits long.
+  const hoursString = hours.toString().padStart(2, "0");
+  const minutesString = minutes.toString().padStart(2, "0");
+  const secondsString = seconds.toString().padStart(2, "0");
 
-  if (duration < 3600000) {
-    return minutes + ":" + seconds;
-  } else {
-    return hours + ":" + minutes + ":" + seconds;
-  }
+  // Return the string timestamp in the format `0:35`.
+  return `${hoursString}:${minutesString}:${secondsString}`;
 }
 
 function convertNumber(number: number, decPlaces: number) {

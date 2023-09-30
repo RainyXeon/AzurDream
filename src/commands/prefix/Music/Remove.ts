@@ -16,10 +16,10 @@ export default {
     message: Message,
     args: string[],
     language: string,
-    prefix: string
+    prefix: string,
   ) => {
     const msg = await message.channel.send(
-      `${client.i18n.get(language, "music", "pause_loading")}`
+      `${client.i18n.get(language, "music", "pause_loading")}`,
     );
     const player = client.manager.getQueue(message.guild!);
 
@@ -36,15 +36,15 @@ export default {
     const tracks = args[0];
     if (tracks && isNaN(+tracks))
       return msg.edit(
-        `${client.i18n.get(language, "music", "number_invalid")}`
+        `${client.i18n.get(language, "music", "number_invalid")}`,
       );
     if (Number(tracks) == 0)
       return msg.edit(
-        `${client.i18n.get(language, "music", "removetrack_already")}`
+        `${client.i18n.get(language, "music", "removetrack_already")}`,
       );
     if (Number(tracks) > player.songs.length)
       return msg.edit(
-        `${client.i18n.get(language, "music", "removetrack_notfound")}`
+        `${client.i18n.get(language, "music", "removetrack_notfound")}`,
       );
 
     const song = player.songs[Number(tracks) - 1];
@@ -58,7 +58,7 @@ export default {
           url: song.url,
           duration: convertTime(player.currentTime),
           request: String(song.member),
-        })}`
+        })}`,
       )
       .setColor(client.color);
 

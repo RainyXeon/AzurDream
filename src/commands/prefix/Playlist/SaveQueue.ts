@@ -4,11 +4,11 @@ import {
   Message,
 } from "discord.js";
 import { Manager } from "../../../manager.js";
-import { KazagumoTrack } from "kazagumo";
+import { Song } from "distube";
 
-const TrackAdd: KazagumoTrack[] = [];
+const TrackAdd: Song[] = [];
 const TrackExist: string[] = [];
-let Result: KazagumoTrack[] | null = null;
+let Result: Song[] | null = null;
 
 export default {
   name: "playlist-save-queue",
@@ -22,12 +22,12 @@ export default {
     message: Message,
     args: string[],
     language: string,
-    prefix: string
+    prefix: string,
   ) => {
     const value = args[0] ? args[0] : null;
     if (value == null)
       return message.channel.send(
-        `${client.i18n.get(language, "playlist", "invalid")}`
+        `${client.i18n.get(language, "playlist", "invalid")}`,
       );
     const Plist = value!.replace(/_/g, " ");
     const fullList = await client.db.get("playlist");
@@ -42,17 +42,17 @@ export default {
 
     if (!playlist)
       return message.channel.send(
-        `${client.i18n.get(language, "playlist", "savequeue_notfound")}`
+        `${client.i18n.get(language, "playlist", "savequeue_notfound")}`,
       );
     if (playlist.owner !== message.author.id)
       return message.channel.send(
-        `${client.i18n.get(language, "playlist", "savequeue_owner")}`
+        `${client.i18n.get(language, "playlist", "savequeue_owner")}`,
       );
 
-    const player = client.manager.players.get(message.guild!.id);
+    const player = client.manager.getQueue(message.guild!.id);
     if (!player)
       return message.channel.send(
-        `${client.i18n.get(language, "noplayer", "no_player")}`
+        `${client.i18n.get(language, "noplayer", "no_player")}`,
       );
 
     const { channel } = message.member!.voice;
@@ -61,13 +61,10 @@ export default {
       message.member!.voice.channel !== message.guild!.members.me!.voice.channel
     )
       return message.channel.send(
-        `${client.i18n.get(language, "noplayer", "no_voice")}`
+        `${client.i18n.get(language, "noplayer", "no_voice")}`,
       );
 
-    const queue = player.queue.map((track) => track);
-    const current = player.queue.current;
-
-    TrackAdd.push(current as KazagumoTrack);
+    const queue = player.songs.map((track) => track);
     TrackAdd.push(...queue);
 
     if (!playlist && playlist.tracks.length === 0) Result = TrackAdd;
@@ -77,7 +74,7 @@ export default {
         const element = playlist.tracks[i].uri;
         TrackExist.push(element);
       }
-      Result = TrackAdd.filter((track) => !TrackExist.includes(track.uri));
+      Result = TrackAdd.filter((track) => !TrackExist.includes(track.url));
     }
 
     if (Result!.length == 0) {
@@ -85,7 +82,7 @@ export default {
         .setDescription(
           `${client.i18n.get(language, "playlist", "savequeue_no_new_saved", {
             name: Plist,
-          })}`
+          })}`,
         )
         .setColor(client.color);
       return message.channel.send({ embeds: [embed] });
@@ -96,19 +93,19 @@ export default {
         `${client.i18n.get(language, "playlist", "savequeue_saved", {
           name: Plist,
           tracks: String(queue.length + 1),
-        })}`
+        })}`,
       )
       .setColor(client.color);
     await message.channel.send({ embeds: [embed] });
 
     Result!.forEach(async (track) => {
       await client.db.push(`playlist.${pid[0]}.tracks`, {
-        title: track.title,
-        uri: track.uri,
-        length: track.length,
+        title: track.name,
+        uri: track.url,
+        length: track.duration,
         thumbnail: track.thumbnail,
-        author: track.author,
-        requester: track.requester, // Just case can push
+        author: track.uploader,
+        requester: track.member, // Just case can push
       });
     });
 

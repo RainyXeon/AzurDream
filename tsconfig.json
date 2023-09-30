@@ -1,5 +1,9 @@
 {
-  "include": ["src/**/*", "src/test.ts"],
+  "include": [
+    "src/**/*",
+    "src/test.ts",
+    "src/commands/prefix/Playlist/Import.ts"
+  ],
   "ts-node": {
     "esm": true,
     "experimentalSpecifierResolution": "node"

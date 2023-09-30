@@ -1,4 +1,10 @@
-import { EmbedBuilder, GuildMember, Message, TextChannel, VoiceBasedChannel } from "discord.js";
+import {
+  EmbedBuilder,
+  GuildMember,
+  Message,
+  TextChannel,
+  VoiceBasedChannel,
+} from "discord.js";
 import { Manager } from "../../../manager.js";
 
 // Main code
@@ -14,10 +20,10 @@ export default {
     message: Message,
     args: string[],
     language: string,
-    prefix: string
+    prefix: string,
   ) => {
     const msg = await message.channel.send(
-      `${client.i18n.get(language, "music", "autoplay_loading")}`
+      `${client.i18n.get(language, "music", "autoplay_loading")}`,
     );
     const player = client.manager.getQueue(message.guild!);
     if (!player)
@@ -31,8 +37,7 @@ export default {
       return msg.edit(`${client.i18n.get(language, "noplayer", "no_voice")}`);
 
     if (player.autoplay == true) {
-
-      client.manager.toggleAutoplay(message)
+      client.manager.toggleAutoplay(message);
 
       await player.songs.splice(1, player.songs.length);
 
@@ -46,7 +51,7 @@ export default {
       const search = `https://www.youtube.com/watch?v=${identifier}&list=RD${identifier}`;
       const res = await client.manager.search(search);
 
-      client.manager.toggleAutoplay(message)
+      client.manager.toggleAutoplay(message);
 
       await client.manager.play(
         message.member!.voice.channel as VoiceBasedChannel,

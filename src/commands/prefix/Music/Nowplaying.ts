@@ -19,11 +19,11 @@ export default {
     message: Message,
     args: string[],
     language: string,
-    prefix: string
+    prefix: string,
   ) => {
     const realtime = client.config.lavalink.NP_REALTIME;
     const msg = await message.channel.send(
-      `${client.i18n.get(language, "music", "np_loading")}`
+      `${client.i18n.get(language, "music", "np_loading")}`,
     );
     const player = client.manager.getQueue(message.guild!);
     if (!player)
@@ -81,7 +81,7 @@ export default {
           name: `${client.i18n.get(
             language,
             "player",
-            "total_duration_title"
+            "total_duration_title",
           )}`,
           value: `${FormatDuration(QueueDuration(player))}`,
           inline: true,
@@ -90,9 +90,7 @@ export default {
           name: `${client.i18n.get(language, "player", "download_title")}`,
           value: `**[${
             song!.name
-          } - y2mate.com](https://www.y2mate.com/youtube/${
-            song!.id
-          })**`,
+          } - y2mate.com](https://www.y2mate.com/youtube/${song!.id})**`,
           inline: false,
         },
         {

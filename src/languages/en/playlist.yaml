@@ -36,7 +36,7 @@ detail_page_notfound: "There are only %{page} pages available."
 detail_track: "%{num}. **[%{title}](%{url})** | *Author*: %{author} | `[%{duration}]`"
 
 ##### Import command #####
-import_loading: "Importing a playlist to the queue..."
+import_loading: "Importing %{song_num} tracks to the queue..."
 import_voice: "You need to be in a voice channel to use command."
 import_join: "I don't have permission to join your voice channel."
 import_speak: "I don't have permission to speak in your voice channel."
@@ -95,6 +95,7 @@ invalid: "Provided playlist name or id is invalid"
 
 enabled: "Enabled"
 disabled: "Disabled"
+invalid_url: "No url was provided"
 
 ##### Edit command #####
 edit_exist: "This ID is already in use, please try another ID."

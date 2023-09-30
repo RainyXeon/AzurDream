@@ -8,7 +8,10 @@ import { Manager } from "../../manager.js";
 import { Queue, Song } from "distube";
 
 export default async (client: Manager, queue: Queue, track: Song) => {
-  // await client.UpdateQueueMsg(queue);
+  await client.UpdateQueueMsg(queue);
+  const setup_channel = await client.db.get(`setup.guild_${queue.id}`);
+
+  if (queue.textChannel?.id! === setup_channel.channel) return;
 
   var newQueue = client.manager.getQueue(queue!.id);
 
@@ -268,7 +271,6 @@ export default async (client: Manager, queue: Queue, track: Song) => {
         collector.stop();
       }
       await queue!.songs.splice(1, queue!.songs.length);
-      await client.UpdateQueueMsg(queue);
 
       const embed = new EmbedBuilder()
         .setDescription(`\`📛\` | **Queue has been:** \`Cleared\``)

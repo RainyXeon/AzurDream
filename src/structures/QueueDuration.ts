@@ -1,12 +1,12 @@
-import { KazagumoPlayer, KazagumoQueue, KazagumoTrack } from "kazagumo";
+import { Queue, Song } from "distube";
 
-function QueueDuration(player: KazagumoPlayer) {
-  const current = player.queue.current!.length ?? 0;
-  return player.queue.reduce((acc, cur) => acc + (cur.length || 0), current);
+function QueueDuration(player: Queue) {
+  const current = player.songs[0]!.duration ?? 0;
+  return player.songs.reduce((acc, cur) => acc + (cur.duration || 0), current);
 }
 
-function StartQueueDuration(tracks: KazagumoTrack[]) {
-  const current = tracks[0].length ?? 0;
-  return tracks.reduce((acc, cur) => acc + (cur.length || 0), current);
+function StartQueueDuration(tracks: Song[]) {
+  const current = tracks[0].duration ?? 0;
+  return tracks.reduce((acc, cur) => acc + (cur.duration || 0), current);
 }
 export { QueueDuration, StartQueueDuration };

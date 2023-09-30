@@ -16,12 +16,12 @@ export default {
     message: Message,
     args: string[],
     language: string,
-    prefix: string
+    prefix: string,
   ) => {
     const number = args[0] ? args[0] : null;
     if (number && isNaN(+number))
       return message.channel.send(
-        `${client.i18n.get(language, "music", "number_invalid")}`
+        `${client.i18n.get(language, "music", "number_invalid")}`,
       );
 
     const playlists: PlaylistInterface[] = [];
@@ -51,7 +51,7 @@ export default {
           tracks: String(playlist.tracks!.length),
           create: created,
         })}
-                `
+                `,
       );
     }
 
@@ -85,7 +85,7 @@ export default {
           pages,
           30000,
           playlists.length,
-          language
+          language,
         );
         return (playlists.length = 0);
       } else {
@@ -105,7 +105,7 @@ export default {
             "view_page_notfound",
             {
               page: String(pagesNum),
-            }
+            },
           )}`,
         });
       const pageNum = Number(number) == 0 ? 1 : Number(number) - 1;
