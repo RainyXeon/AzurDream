@@ -55,11 +55,17 @@ export default {
     const mode = args[0];
 
     if (mode_array.includes(mode))
-      return message.channel.send(
-        `${client.i18n.get(language, "music", "loop_invalid", {
-          mode: mode_array.join(", "),
-        })}`,
-      );
+      return message.channel.send({
+        embeds: [
+          new EmbedBuilder()
+            .setDescription(
+              `${client.i18n.get(language, "music", "loop_invalid", {
+                mode: mode_array.join(", "),
+              })}`,
+            )
+            .setColor(client.color),
+        ],
+      });
 
     const loop_mode = {
       none: "none",

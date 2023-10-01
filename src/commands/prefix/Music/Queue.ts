@@ -21,23 +21,41 @@ export default {
     const value = args[0];
 
     if (value && isNaN(+value))
-      return message.channel.send(
-        `${client.i18n.get(language, "music", "number_invalid")}`,
-      );
+      return message.channel.send({
+        embeds: [
+          new EmbedBuilder()
+            .setDescription(
+              `${client.i18n.get(language, "music", "number_invalid")}`,
+            )
+            .setColor(client.color),
+        ],
+      });
 
-    const player = client.manager.getQueue(message.guild!);
+    const player = client.manager.getQueue(message.guild!.id);
     if (!player)
-      return message.channel.send(
-        `${client.i18n.get(language, "noplayer", "no_player")}`,
-      );
+      return message.channel.send({
+        embeds: [
+          new EmbedBuilder()
+            .setDescription(
+              `${client.i18n.get(language, "noplayer", "no_player")}`,
+            )
+            .setColor(client.color),
+        ],
+      });
     const { channel } = message.member!.voice;
     if (
       !channel ||
       message.member!.voice.channel !== message.guild!.members.me!.voice.channel
     )
-      return message.channel.send(
-        `${client.i18n.get(language, "noplayer", "no_voice")}`,
-      );
+      return message.channel.send({
+        embeds: [
+          new EmbedBuilder()
+            .setDescription(
+              `${client.i18n.get(language, "noplayer", "no_voice")}`,
+            )
+            .setColor(client.color),
+        ],
+      });
 
     const song = player.songs[0];
 
