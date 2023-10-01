@@ -1,34 +1,48 @@
 import {
   EmbedBuilder,
+  CommandInteractionOptionResolver,
   ApplicationCommandOptionType,
-  Message,
+  CommandInteraction,
 } from "discord.js";
 import formatDuration from "../../../structures/FormatDuration.js";
-import { NormalPage } from "../../../structures/PageQueue.js";
+import { SlashPage } from "../../../structures/PageQueue.js";
 import { Manager } from "../../../manager.js";
-import { PlaylistTrackInterface } from "../../../types/Playlist.js";
+import {
+  PlaylistInterface,
+  PlaylistTrackInterface,
+} from "../../../types/Playlist.js";
 
 export default {
-  name: "playlist-detail",
+  name: ["playlist", "detail"],
   description: "Detail a playlist",
   category: "Playlist",
-  usage: "<playlist_name> <number>",
-  aliases: ["pl-detail"],
-
+  options: [
+    {
+      name: "name",
+      description: "The name of the playlist",
+      required: true,
+      type: ApplicationCommandOptionType.String,
+    },
+    {
+      name: "page",
+      description: "The page you want to view",
+      required: false,
+      type: ApplicationCommandOptionType.Integer,
+    },
+  ],
   run: async (
+    interaction: CommandInteraction,
     client: Manager,
-    message: Message,
-    args: string[],
     language: string,
-    prefix: string,
   ) => {
-    const value = args[0] ? args[0] : "";
-    const number = args[1];
+    await interaction.deferReply({ ephemeral: false });
 
-    if (number && isNaN(+number))
-      return message.channel.send(
-        `${client.i18n.get(language, "music", "number_invalid")}`,
-      );
+    const value = (
+      interaction.options as CommandInteractionOptionResolver
+    ).getString("name");
+    const number = (
+      interaction.options as CommandInteractionOptionResolver
+    ).getInteger("page");
 
     const Plist = value!.replace(/_/g, " ");
 
@@ -36,18 +50,19 @@ export default {
 
     const pid = Object.keys(fullList).filter(function (key) {
       return (
-        fullList[key].owner == message.author.id && fullList[key].name == Plist
+        fullList[key].owner == interaction.user.id &&
+        fullList[key].name == Plist
       );
     });
 
     const playlist = fullList[pid[0]];
 
     if (!playlist)
-      return message.channel.send(
+      return interaction.editReply(
         `${client.i18n.get(language, "playlist", "detail_notfound")}`,
       );
-    if (playlist.private && playlist.owner !== message.author.id)
-      return message.channel.send(
+    if (playlist.private && playlist.owner !== interaction.user.id)
+      return interaction.editReply(
         `${client.i18n.get(language, "playlist", "detail_private")}`,
       );
 
@@ -55,6 +70,7 @@ export default {
     if (pagesNum === 0) pagesNum = 1;
 
     const playlistStrings = [];
+
     for (let i = 0; i < playlist.tracks.length; i++) {
       const playlists = playlist.tracks[i];
       playlistStrings.push(
@@ -84,7 +100,7 @@ export default {
           name: `${client.i18n.get(language, "playlist", "detail_embed_title", {
             name: playlist.name,
           })}`,
-          iconURL: message.author.displayAvatarURL(),
+          iconURL: interaction.user.displayAvatarURL(),
         })
         .setDescription(`${str == "" ? "  Nothing" : "\n" + str}`)
         .setColor(client.color) //Page • ${i + 1}/${pagesNum} | ${playlist.tracks.length} • Songs | ${totalDuration} • Total duration
@@ -106,29 +122,29 @@ export default {
     }
     if (!number) {
       if (pages.length == pagesNum && playlist.tracks.length > 10)
-        NormalPage(
+        SlashPage(
           client,
-          message,
+          interaction,
           pages,
           60000,
           playlist.tracks.length,
           Number(totalDuration),
           language,
         );
-      else return message.channel.send({ embeds: [pages[0]] });
+      else return interaction.editReply({ embeds: [pages[0]] });
     } else {
-      if (isNaN(+number))
-        return message.channel.send(
+      if (isNaN(number))
+        return interaction.editReply(
           `${client.i18n.get(language, "playlist", "detail_notnumber")}`,
         );
-      if (Number(number) > pagesNum)
-        return message.channel.send(
+      if (number > pagesNum)
+        return interaction.editReply(
           `${client.i18n.get(language, "playlist", "detail_page_notfound", {
             page: String(pagesNum),
           })}`,
         );
-      const pageNum = Number(number) == 0 ? 1 : Number(number) - 1;
-      return message.channel.send({ embeds: [pages[pageNum]] });
+      const pageNum = number == 0 ? 1 : number - 1;
+      return interaction.editReply({ embeds: [pages[pageNum]] });
     }
   },
 };

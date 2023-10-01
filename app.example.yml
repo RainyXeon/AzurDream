@@ -12,6 +12,12 @@ bot:
   LIMIT_TRACK: 50 # The number of tracks you want to limit
   LIMIT_PLAYLIST: 20 # The number of playlist you want to limit
 
+distube:
+  SPOTIFY:
+    enable: true
+    id: luiasdjfhjjkadhflkjasdfhlkjasdfhf
+    secret: asdflkjajshfldkhasdljk
+
 features:
   DATABASE:
     # Note: You can't enable all or 2 databases. It will return to JSON database

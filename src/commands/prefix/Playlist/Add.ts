@@ -17,7 +17,6 @@ type YTSearchType =
   | yts.VideoMetadataResult
   | yts.VideoSearchResult;
 const TrackAdd: YTSearchType[] = [];
-let type = "none";
 
 export default {
   name: "playlist-add",

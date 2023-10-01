@@ -7,7 +7,7 @@ A versatile and powerful music bot for Discord that brings rhythm and melody to 
 - [x] Full typescript for avoid error in production
 - [x] Music System
 - [x] Multi Language
-- [x] Playlist Network
+- [x] Playlist Network [YOUTUBE LINK ONLY!]
 - [x] SlashCommand
 - [x] ContextMenus
 - [x] Custom Filters

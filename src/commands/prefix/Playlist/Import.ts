@@ -111,45 +111,38 @@ export default {
     );
 
     for (let i = 0; i < playlist.tracks!.length; i++) {
-      const res = await client.manager.search(playlist.tracks![i].uri, {
-        type: SearchResultType.VIDEO,
-        limit: 1,
-      });
-      SongAdd.push(res[0].url);
+      SongAdd.push(playlist.tracks![i].uri);
       SongLoad++;
       msg.edit(
         `${client.i18n.get(language, "playlist", "import_loading", {
           song_num: String(SongLoad),
         })}`,
       );
-      if (SongLoad == playlist.tracks!.length) {
-        const import_playlist = await client.manager.createCustomPlaylist(
-          SongAdd,
-        );
-
-        await client.manager.play(
-          message.member!.voice.channel as VoiceBasedChannel,
-          import_playlist,
-          {
-            member: message.member as GuildMember,
-            textChannel: message.channel as TextChannel,
-            message,
-          },
-        );
-
-        const embed = new EmbedBuilder() // **Imported • \`${Plist}\`** (${playlist.tracks.length} tracks) • ${message.author}
-          .setDescription(
-            `${client.i18n.get(language, "playlist", "import_imported", {
-              name: playlist.name,
-              tracks: String(playlist.tracks!.length),
-              duration: totalDuration,
-              user: String(message.author),
-            })}`,
-          )
-          .setColor(client.color);
-
-        msg.edit({ content: " ", embeds: [embed] });
-      }
     }
+
+    const import_playlist = await client.manager.createCustomPlaylist(SongAdd);
+
+    await client.manager.play(
+      message.member!.voice.channel as VoiceBasedChannel,
+      import_playlist,
+      {
+        member: message.member as GuildMember,
+        textChannel: message.channel as TextChannel,
+        message,
+      },
+    );
+
+    const embed = new EmbedBuilder() // **Imported • \`${Plist}\`** (${playlist.tracks.length} tracks) • ${message.author}
+      .setDescription(
+        `${client.i18n.get(language, "playlist", "import_imported", {
+          name: playlist.name,
+          tracks: String(playlist.tracks!.length),
+          duration: totalDuration,
+          user: String(message.author),
+        })}`,
+      )
+      .setColor(client.color);
+
+    msg.edit({ content: " ", embeds: [embed] });
   },
 };
