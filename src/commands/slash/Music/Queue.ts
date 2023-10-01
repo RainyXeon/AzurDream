@@ -35,18 +35,30 @@ export default {
 
     const player = client.manager.getQueue(interaction.guild!);
     if (!player)
-      return interaction.editReply(
-        `${client.i18n.get(language, "noplayer", "no_player")}`,
-      );
-    const { channel } = (interaction.member as GuildMember)!.voice;
+      return interaction.editReply({
+        embeds: [
+          new EmbedBuilder()
+            .setDescription(
+              `${client.i18n.get(language, "noplayer", "no_player")}`,
+            )
+            .setColor(client.color),
+        ],
+      });
+    const { channel } = (interaction.member as GuildMember).voice;
     if (
       !channel ||
       (interaction.member as GuildMember).voice.channel !==
         interaction.guild!.members.me!.voice.channel
     )
-      return interaction.editReply(
-        `${client.i18n.get(language, "noplayer", "no_voice")}`,
-      );
+      return interaction.editReply({
+        embeds: [
+          new EmbedBuilder()
+            .setDescription(
+              `${client.i18n.get(language, "noplayer", "no_voice")}`,
+            )
+            .setColor(client.color),
+        ],
+      });
 
     const song = player.songs[0];
 
@@ -115,14 +127,26 @@ export default {
       else return interaction.editReply({ embeds: [pages[0]] });
     } else {
       if (isNaN(value))
-        return interaction.editReply(
-          `${client.i18n.get(language, "music", "queue_notnumber")}`,
+        return interaction.editReply({
+          embeds: [
+            new EmbedBuilder()
+            .setDescription(`${client.i18n.get(language, "music", "queue_notnumber")}`,)
+            .setColor(client.color)
+          ]
+        }
+          
         );
       if (value > pagesNum)
         return interaction.editReply(
-          `${client.i18n.get(language, "music", "queue_page_notfound", {
-            page: String(pagesNum),
-          })}`,
+          {
+            embeds: [
+              new EmbedBuilder()
+              .setDescription(          `${client.i18n.get(language, "music", "queue_page_notfound", {
+                page: String(pagesNum),
+              })}`,)
+              .setColor(client.color)
+            ]
+          }
         );
       const pageNum = value == 0 ? 1 : value - 1;
       return interaction.editReply({ embeds: [pages[pageNum]] });

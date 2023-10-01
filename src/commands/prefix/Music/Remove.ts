@@ -55,15 +55,34 @@ export default {
     const tracks = args[0];
     if (tracks && isNaN(+tracks))
       return msg.edit(
-        `${client.i18n.get(language, "music", "number_invalid")}`,
+        {
+          embeds: [
+            new EmbedBuilder()
+            .setDescription(`${client.i18n.get(language, "music", "number_invalid")}`,)
+            .setColor(client.color)
+          ]
+        }
       );
     if (Number(tracks) == 0)
-      return msg.edit(
-        `${client.i18n.get(language, "music", "removetrack_already")}`,
+      return msg.edit(        {
+        embeds: [
+          new EmbedBuilder()
+          .setDescription(`${client.i18n.get(language, "music", "removetrack_already")}`,)
+          .setColor(client.color)
+        ]
+      }
+
       );
     if (Number(tracks) > player.songs.length)
       return msg.edit(
-        `${client.i18n.get(language, "music", "removetrack_notfound")}`,
+        {
+          embeds: [
+            new EmbedBuilder()
+            .setDescription(`${client.i18n.get(language, "music", "removetrack_notfound")}`)
+            .setColor(client.color)
+          ]
+        }
+        ,
       );
 
     const song = player.songs[Number(tracks) - 1];

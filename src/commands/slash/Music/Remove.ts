@@ -26,29 +26,69 @@ export default {
     client: Manager,
     language: string,
   ) => {
-    const msg = await interaction.deferReply({ ephemeral: false });
+    await interaction.deferReply({ ephemeral: false });
 
-    const player = client.manager.getQueue(interaction.guild!.id);
+    const msg = await interaction.editReply(
+      {
+        embeds: [
+          new EmbedBuilder()
+          .setDescription(`${client.i18n.get(language, "music", "247_loading")}`)
+          .setColor(client.color)
+        ]
+      }
+    );
+
+    const player = client.manager.getQueue(interaction.guild!);
     if (!player)
-      return msg.edit(`${client.i18n.get(language, "noplayer", "no_player")}`);
+      return msg.edit({
+        embeds: [
+          new EmbedBuilder()
+            .setDescription(
+              `${client.i18n.get(language, "noplayer", "no_player")}`,
+            )
+            .setColor(client.color),
+        ],
+      });
     const { channel } = (interaction.member as GuildMember).voice;
     if (
       !channel ||
       (interaction.member as GuildMember).voice.channel !==
         interaction.guild!.members.me!.voice.channel
     )
-      return msg.edit(`${client.i18n.get(language, "noplayer", "no_voice")}`);
+      return msg.edit({
+        embeds: [
+          new EmbedBuilder()
+            .setDescription(
+              `${client.i18n.get(language, "noplayer", "no_voice")}`,
+            )
+            .setColor(client.color),
+        ],
+      });
 
     const tracks = (
       interaction.options as CommandInteractionOptionResolver
     ).getInteger("position");
     if (tracks == 0)
       return interaction.editReply(
-        `${client.i18n.get(language, "music", "removetrack_already")}`,
+    {
+      embeds: [
+        new EmbedBuilder()
+        .setDescription(`${client.i18n.get(language, "music", "removetrack_already")}`,)
+        .setColor(client.color)
+      ]
+    }
+        
       );
     if (Number(tracks) > player.songs.length)
       return interaction.editReply(
-        `${client.i18n.get(language, "music", "removetrack_notfound")}`,
+    {
+      embeds: [
+        new EmbedBuilder()
+        .setDescription(`${client.i18n.get(language, "music", "removetrack_notfound")}`,)
+        .setColor(client.color)
+      ]
+    }
+        
       );
 
     const song = player.songs[Number(tracks) - 1];

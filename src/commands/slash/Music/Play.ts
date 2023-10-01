@@ -5,6 +5,7 @@ import {
   CommandInteractionOptionResolver,
   GuildMember,
   TextChannel,
+  EmbedBuilder
 } from "discord.js";
 import { Manager } from "../../../manager.js";
 
@@ -39,34 +40,58 @@ export default {
           interaction.options as CommandInteractionOptionResolver
         ).get("search")!.value;
         const msg = await interaction.editReply(
-          `${client.i18n.get(language, "music", "play_loading", {
-            result: String(
-              (interaction.options as CommandInteractionOptionResolver).get(
-                "search",
-              )!.value,
-            ),
-          })}`,
+          {
+            embeds: [
+              new EmbedBuilder()
+              .setDescription(`${client.i18n.get(language, "music", "play_loading", {
+                result: String(
+                  (interaction.options as CommandInteractionOptionResolver).get(
+                    "search",
+                  )!.value,
+                ),
+              })}`)
+              .setColor(client.color)
+            ]
+          }
         );
         await client.queue_message.set(interaction.user.id, msg.id);
 
         const { channel } = (interaction.member as GuildMember).voice;
         if (!channel)
           return msg.edit(
-            `${client.i18n.get(language, "music", "play_invoice")}`,
+            {
+              embeds: [
+                new EmbedBuilder()
+                .setDescription(`${client.i18n.get(language, "music", "play_invoice")}`)
+                .setColor(client.color)
+              ]
+            }
           );
         if (
           !interaction
             .guild!.members.cache.get(client.user!.id)!
             .permissions.has(PermissionsBitField.Flags.Connect)
         )
-          return msg.edit(`${client.i18n.get(language, "music", "play_join")}`);
+          return msg.edit({
+            embeds: [
+              new EmbedBuilder()
+              .setDescription(`${client.i18n.get(language, "music", "play_join")}`)
+              .setColor(client.color)
+            ]
+          });
         if (
           !interaction
             .guild!.members.cache.get(client.user!.id)!
             .permissions.has(PermissionsBitField.Flags.Speak)
         )
           return msg.edit(
-            `${client.i18n.get(language, "music", "play_speak")}`,
+            {
+              embeds: [
+                new EmbedBuilder()
+                .setDescription(`${client.i18n.get(language, "music", "play_speak")}`)
+                .setColor(client.color)
+              ]
+            }
           );
 
         await client.manager.play(

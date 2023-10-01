@@ -50,7 +50,7 @@ export default {
             .setColor(client.color),
         ],
       });
-    const value = args[0];
+    const value = Number(args[0]);
 
     if (value && isNaN(+value))
       return msg.edit(
@@ -60,9 +60,9 @@ export default {
     const song_position = player.currentTime;
     const CurrentDuration = formatDuration(song_position);
 
-    if (value && !isNaN(+value)) {
-      if (song_position - Number(value) > 0) {
-        await player.seek(song_position - Number(value));
+    if (value && !isNaN(value)) {
+      if (song_position - value > 0) {
+        await player.seek(song_position - value);
 
         const rewind1 = new EmbedBuilder()
           .setDescription(
@@ -75,14 +75,27 @@ export default {
         msg.edit({ content: " ", embeds: [rewind1] });
       } else {
         return msg.edit(
-          `${client.i18n.get(language, "music", "rewind_beyond")}`,
+          {
+            embeds: [
+              new EmbedBuilder()
+              .setDescription(`${client.i18n.get(language, "music", "rewind_beyond")}`,)
+              .setColor(client.color)
+            ]
+          }
+          
         );
       }
-    } else if (value && isNaN(+value)) {
+    } else if (value && isNaN(value)) {
       return msg.edit(
-        `${client.i18n.get(language, "music", "rewind_invalid", {
-          prefix: prefix,
-        })}`,
+        {
+          embeds: [
+            new EmbedBuilder()
+            .setDescription(`${client.i18n.get(language, "music", "rewind_invalid", {
+              prefix: "/",
+            })}`,)
+            .setColor(client.color)
+          ]
+        }
       );
     }
 

@@ -13,18 +13,41 @@ export default {
   ) => {
     await interaction.deferReply({ ephemeral: false });
     const msg = await interaction.editReply(
-      `${client.i18n.get(language, "music", "clearqueue_loading")}`,
+      {
+        embeds: [
+          new EmbedBuilder()
+          .setDescription(`${client.i18n.get(language, "music", "loading")}`)
+          .setColor(client.color)
+        ]
+      }
     );
+
     const player = client.manager.getQueue(interaction.guild!);
     if (!player)
-      return msg.edit(`${client.i18n.get(language, "noplayer", "no_player")}`);
+      return msg.edit({
+        embeds: [
+          new EmbedBuilder()
+            .setDescription(
+              `${client.i18n.get(language, "noplayer", "no_player")}`,
+            )
+            .setColor(client.color),
+        ],
+      });
     const { channel } = (interaction.member as GuildMember).voice;
     if (
       !channel ||
       (interaction.member as GuildMember).voice.channel !==
         interaction.guild!.members.me!.voice.channel
     )
-      return msg.edit(`${client.i18n.get(language, "noplayer", "no_voice")}`);
+      return msg.edit({
+        embeds: [
+          new EmbedBuilder()
+            .setDescription(
+              `${client.i18n.get(language, "noplayer", "no_voice")}`,
+            )
+            .setColor(client.color),
+        ],
+      });
     await player.songs.splice(1, player.songs.length);
 
     const cleared = new EmbedBuilder()

@@ -18,7 +18,7 @@ export default {
     language: string,
     prefix: string,
   ) => {
-    const value = args[0];
+    const value = Number(args[0]);
 
     if (value && isNaN(+value))
       return message.channel.send({
@@ -132,6 +132,29 @@ export default {
           `${client.i18n.get(language, "music", "queue_page_notfound", {
             page: String(pagesNum),
           })}`,
+        );
+
+        if (isNaN(value))
+        return message.channel.send({
+          embeds: [
+            new EmbedBuilder()
+            .setDescription(`${client.i18n.get(language, "music", "queue_notnumber")}`,)
+            .setColor(client.color)
+          ]
+        }
+          
+        );
+      if (value > pagesNum)
+        return message.channel.send(
+          {
+            embeds: [
+              new EmbedBuilder()
+              .setDescription(          `${client.i18n.get(language, "music", "queue_page_notfound", {
+                page: String(pagesNum),
+              })}`,)
+              .setColor(client.color)
+            ]
+          }
         );
       const pageNum = Number(value) == 0 ? 1 : Number(value) - 1;
       return message.channel.send({ embeds: [pages[pageNum]] });
