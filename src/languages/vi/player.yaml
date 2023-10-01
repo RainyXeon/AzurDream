@@ -60,3 +60,5 @@ leave_title: "Di chuyển"
 leave_desc: "*Tôi đã bị di chuyển, đã tự động ngắt kết nối*"
 player_end: "Ngắt kết nối kênh đàm thoại <#%{leave}> vì bạn để tôi có một mình à ;<"
 download_title: "Tải xuống:"
+
+player_empty: "**Kênh thoại bị trống nhạc!**"

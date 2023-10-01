@@ -60,3 +60,5 @@ leave_title: "Moved"
 leave_desc: "*I got moved auto disconnected*"
 player_end: "**Disconnected from <#%{leave}> because I was left alone ;(**"
 download_title: "Download:"
+
+player_empty: "**Channel is Empty!**"
