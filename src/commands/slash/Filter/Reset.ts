@@ -3,8 +3,8 @@ import delay from "delay";
 import { Manager } from "../../../manager.js";
 
 export default {
-  name: ["filter", "3d"],
-  description: "Turning on 3d filter",
+  name: ["filter", "reset"],
+  description: "Reset all filter",
   category: "Filter",
   run: async (
     interaction: CommandInteraction,
@@ -15,7 +15,7 @@ export default {
 
     const msg = await interaction.editReply(
       `${client.i18n.get(language, "filters", "filter_loading", {
-        name: "3d",
+        name: "Reset",
       })}`,
     );
 
@@ -36,7 +36,7 @@ export default {
     const embed = new EmbedBuilder()
       .setDescription(
         `${client.i18n.get(language, "filters", "filter_on", {
-          name: "3d",
+          name: "Reset",
         })}`,
       )
       .setColor(client.color);

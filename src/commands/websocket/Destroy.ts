@@ -3,12 +3,18 @@ import { Manager } from "../../manager.js";
 export default {
   name: "destroy",
   run: async (client: Manager, json: Record<string, any>, ws: WebSocket) => {
-    const player = client.manager.players.get(json.guild);
-    if (!player)
+    if (!json.user)
       return ws.send(
-        JSON.stringify({ error: "0x100", message: "No player on this guild" }),
+        JSON.stringify({ error: "0x115", message: "No user's id provided" }),
+      );
+    if (!json.guild)
+      return ws.send(
+        JSON.stringify({ error: "0x120", message: "No guild's id provided" }),
       );
 
-    player.destroy();
+    const Guild = client.guilds.cache.get(json.guild);
+    const Member = Guild!.members.cache.get(json.user);
+
+    await client.manager.voices.join(Member!.voice.channel!);
   },
 };

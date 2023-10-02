@@ -18,11 +18,6 @@ export default {
       Guild!.channels.cache.find((channel) => channel.name === "general") ||
       Guild!.channels.cache.first();
 
-    await client.manager.createPlayer({
-      guildId: Guild!.id,
-      voiceId: Member!.voice.channel!.id,
-      textId: String(channel?.id),
-      deaf: true,
-    });
+    await client.manager.voices.join(Member!.voice.channel!);
   },
 };

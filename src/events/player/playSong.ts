@@ -13,7 +13,15 @@ export default async (client: Manager, queue: Queue, track: Song) => {
 
   if (queue.textChannel?.id! === setup_channel.channel) return;
 
-  var newQueue = client.manager.getQueue(queue!.id);
+  let guildModel = await client.db.get(`language.guild_${queue.id}`);
+  if (!guildModel) {
+    guildModel = await client.db.set(
+      `language.guild_${queue.id}`,
+      client.config.bot.LANGUAGE,
+    );
+  }
+
+  const language = guildModel;
 
   const embed = new EmbedBuilder()
     .setAuthor({
@@ -23,72 +31,60 @@ export default async (client: Manager, queue: Queue, track: Song) => {
     .setThumbnail(String(track!.thumbnail))
     .setColor(client.color)
     .setDescription(`**[${track!.name}](${track.url})**`)
-    .addFields({
-      name: `Uploader:`,
-      value: `**[${track.uploader.name}](${track.uploader.url})**`,
-      inline: true,
-    })
-    .addFields({ name: `Requester:`, value: `${track.user}`, inline: true })
-    .addFields({
-      name: `Current Volume:`,
-      value: `${queue!.volume}%`,
-      inline: true,
-    })
-    .addFields({
-      name: `Filters:`,
-      value: `${queue!.filters.names.join(", ") || "Normal"}`,
-      inline: true,
-    })
-    .addFields({
-      name: `Autoplay:`,
-      value: `${queue!.autoplay ? "Activated" : "Not Active"}`,
-      inline: true,
-    })
-    .addFields({
-      name: `Total Duration:`,
-      value: `${queue!.formattedDuration}`,
-      inline: true,
-    })
-    .addFields({
-      name: `Current Duration: \`[0:00 / ${track.formattedDuration}]\``,
-      value: `\`\`\`🔴 | 🎶──────────────────────────────\`\`\``,
-      inline: false,
-    })
+    .addFields([
+      {
+        name: `${client.i18n.get(language, "player", "author_title")}`,
+        value: `**[${track.uploader.name}](${track.uploader.url})**`,
+        inline: true,
+      },
+      {
+        name: `${client.i18n.get(language, "player", "request_title")}`,
+        value: `${track!.member}`,
+        inline: true,
+      },
+      {
+        name: `${client.i18n.get(language, "player", "duration_title")}`,
+        value: `${track.formattedDuration}`,
+        inline: true,
+      },
+      {
+        name: `${client.i18n.get(language, "player", "download_title")}`,
+        value: `**[${
+          track!.name
+        } - y2mate.com](https://www.y2mate.com/youtube/${track!.id})**`,
+        inline: false,
+      },
+    ])
     .setTimestamp();
 
   const row = new ActionRowBuilder<ButtonBuilder>()
     .addComponents(
       new ButtonBuilder()
         .setCustomId("pause")
-        .setLabel(`Pause`)
         .setEmoji("⏯")
         .setStyle(ButtonStyle.Success),
     )
     .addComponents(
       new ButtonBuilder()
         .setCustomId("previous")
-        .setLabel(`Previous`)
         .setEmoji("⬅")
         .setStyle(ButtonStyle.Primary),
     )
     .addComponents(
       new ButtonBuilder()
         .setCustomId("stop")
-        .setLabel(`Stop`)
         .setEmoji("✖")
         .setStyle(ButtonStyle.Danger),
     )
     .addComponents(
       new ButtonBuilder()
         .setCustomId("skip")
-        .setLabel(`Skip`)
         .setEmoji("➡")
         .setStyle(ButtonStyle.Primary),
     )
     .addComponents(
       new ButtonBuilder()
         .setCustomId("loop")
-        .setLabel(`Loop`)
         .setEmoji("🔄")
         .setStyle(ButtonStyle.Success),
     );
@@ -97,35 +93,30 @@ export default async (client: Manager, queue: Queue, track: Song) => {
     .addComponents(
       new ButtonBuilder()
         .setCustomId("shuffle")
-        .setLabel(`Shuffle`)
         .setEmoji(`🔀`)
         .setStyle(ButtonStyle.Primary),
     )
     .addComponents(
       new ButtonBuilder()
         .setCustomId("voldown")
-        .setLabel(`Vol -`)
         .setEmoji(`🔉`)
         .setStyle(ButtonStyle.Success),
     )
     .addComponents(
       new ButtonBuilder()
         .setCustomId("clear")
-        .setLabel(`Clear`)
         .setEmoji(`🗑`)
         .setStyle(ButtonStyle.Secondary),
     )
     .addComponents(
       new ButtonBuilder()
         .setCustomId("volup")
-        .setLabel(`Vol +`)
         .setEmoji(`🔊`)
         .setStyle(ButtonStyle.Success),
     )
     .addComponents(
       new ButtonBuilder()
         .setCustomId("queue")
-        .setLabel(`Queue`)
         .setEmoji(`📋`)
         .setStyle(ButtonStyle.Primary),
     );
@@ -151,7 +142,7 @@ export default async (client: Manager, queue: Queue, track: Song) => {
         return false;
       }
     },
-    time: 120000,
+    time: track.duration,
   });
 
   collector.on("collect", async (message) => {
