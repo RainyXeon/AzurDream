@@ -156,9 +156,9 @@ export class Manager extends Client {
         new DeezerPlugin(),
       ],
     });
-    // if (this.config.features.WEB_SERVER.enable) {
-    //   WebServer(this);
-    // }
+    if (this.config.features.WEB_SERVER.enable) {
+      WebServer(this);
+    }
     const loadFile = [
       "loadEvents.js",
       "loadPlayer.js",
