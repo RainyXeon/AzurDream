@@ -32,15 +32,15 @@ export default {
       interaction.options as CommandInteractionOptionResolver
     ).getNumber("seconds");
 
-    const msg = await interaction.editReply(
-      {
-        embeds: [
-          new EmbedBuilder()
-          .setDescription(`${client.i18n.get(language, "music", "247_loading")}`)
-          .setColor(client.color)
-        ]
-      }
-    );
+    const msg = await interaction.editReply({
+      embeds: [
+        new EmbedBuilder()
+          .setDescription(
+            `${client.i18n.get(language, "music", "247_loading")}`,
+          )
+          .setColor(client.color),
+      ],
+    });
 
     const player = client.manager.getQueue(interaction.guild!);
     if (!player)
@@ -86,29 +86,28 @@ export default {
 
         msg.edit({ content: " ", embeds: [rewind1] });
       } else {
-        return msg.edit(
-          {
-            embeds: [
-              new EmbedBuilder()
-              .setDescription(`${client.i18n.get(language, "music", "rewind_beyond")}`,)
-              .setColor(client.color)
-            ]
-          }
-          
-        );
-      }
-    } else if (value && isNaN(value)) {
-      return msg.edit(
-        {
+        return msg.edit({
           embeds: [
             new EmbedBuilder()
-            .setDescription(`${client.i18n.get(language, "music", "rewind_invalid", {
-              prefix: "/",
-            })}`,)
-            .setColor(client.color)
-          ]
-        }
-      );
+              .setDescription(
+                `${client.i18n.get(language, "music", "rewind_beyond")}`,
+              )
+              .setColor(client.color),
+          ],
+        });
+      }
+    } else if (value && isNaN(value)) {
+      return msg.edit({
+        embeds: [
+          new EmbedBuilder()
+            .setDescription(
+              `${client.i18n.get(language, "music", "rewind_invalid", {
+                prefix: "/",
+              })}`,
+            )
+            .setColor(client.color),
+        ],
+      });
     }
 
     if (!value) {
@@ -125,14 +124,15 @@ export default {
 
         msg.edit({ content: " ", embeds: [rewind2] });
       } else {
-        return msg.edit(
-          {embeds: [
+        return msg.edit({
+          embeds: [
             new EmbedBuilder()
-            .setDescription(`${client.i18n.get(language, "music", "rewind_beyond")}`,)
-            .setColor(client.color)
-          ]}
-          
-        );
+              .setDescription(
+                `${client.i18n.get(language, "music", "rewind_beyond")}`,
+              )
+              .setColor(client.color),
+          ],
+        });
       }
     }
   },

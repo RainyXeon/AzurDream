@@ -20,9 +20,15 @@ export default {
   ) => {
     const number = args[0] ? args[0] : null;
     if (number && isNaN(+number))
-      return message.channel.send(
-        `${client.i18n.get(language, "music", "number_invalid")}`,
-      );
+      return message.channel.send({
+        embeds: [
+          new EmbedBuilder()
+            .setDescription(
+              `${client.i18n.get(language, "music", "number_invalid")}`,
+            )
+            .setColor(client.color),
+        ],
+      });
 
     const playlists: PlaylistInterface[] = [];
     const fullList = await client.db.get("playlist");
@@ -95,18 +101,25 @@ export default {
     } else {
       if (isNaN(+number))
         return message.channel.send({
-          content: `${client.i18n.get(language, "playlist", "view_notnumber")}`,
+          embeds: [
+            new EmbedBuilder()
+              .setDescription(
+                `${client.i18n.get(language, "playlist", "view_notnumber")}`,
+              )
+              .setColor(client.color),
+          ],
         });
       if (Number(number) > pagesNum)
         return message.channel.send({
-          content: `${client.i18n.get(
-            language,
-            "playlist",
-            "view_page_notfound",
-            {
-              page: String(pagesNum),
-            },
-          )}`,
+          embeds: [
+            new EmbedBuilder()
+              .setDescription(
+                `${client.i18n.get(language, "playlist", "view_page_notfound", {
+                  page: String(pagesNum),
+                })}`,
+              )
+              .setColor(client.color),
+          ],
         });
       const pageNum = Number(number) == 0 ? 1 : Number(number) - 1;
       await message.channel.send({ embeds: [pages[pageNum]] });

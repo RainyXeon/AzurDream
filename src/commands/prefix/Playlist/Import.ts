@@ -10,7 +10,6 @@ import {
 import { convertTime } from "../../../structures/ConvertTime.js";
 import { Manager } from "../../../manager.js";
 import { PlaylistInterface } from "../../../types/Playlist.js";
-import { SearchResultType } from "distube";
 let playlist: PlaylistInterface | null;
 
 export default {

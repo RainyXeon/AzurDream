@@ -28,15 +28,15 @@ export default {
   ) => {
     await interaction.deferReply({ ephemeral: false });
 
-    const msg = await interaction.editReply(
-      {
-        embeds: [
-          new EmbedBuilder()
-          .setDescription(`${client.i18n.get(language, "music", "247_loading")}`)
-          .setColor(client.color)
-        ]
-      }
-    );
+    const msg = await interaction.editReply({
+      embeds: [
+        new EmbedBuilder()
+          .setDescription(
+            `${client.i18n.get(language, "music", "247_loading")}`,
+          )
+          .setColor(client.color),
+      ],
+    });
 
     const player = client.manager.getQueue(interaction.guild!);
     if (!player)
@@ -69,27 +69,25 @@ export default {
       interaction.options as CommandInteractionOptionResolver
     ).getInteger("position");
     if (tracks == 0)
-      return interaction.editReply(
-    {
-      embeds: [
-        new EmbedBuilder()
-        .setDescription(`${client.i18n.get(language, "music", "removetrack_already")}`,)
-        .setColor(client.color)
-      ]
-    }
-        
-      );
+      return interaction.editReply({
+        embeds: [
+          new EmbedBuilder()
+            .setDescription(
+              `${client.i18n.get(language, "music", "removetrack_already")}`,
+            )
+            .setColor(client.color),
+        ],
+      });
     if (Number(tracks) > player.songs.length)
-      return interaction.editReply(
-    {
-      embeds: [
-        new EmbedBuilder()
-        .setDescription(`${client.i18n.get(language, "music", "removetrack_notfound")}`,)
-        .setColor(client.color)
-      ]
-    }
-        
-      );
+      return interaction.editReply({
+        embeds: [
+          new EmbedBuilder()
+            .setDescription(
+              `${client.i18n.get(language, "music", "removetrack_notfound")}`,
+            )
+            .setColor(client.color),
+        ],
+      });
 
     const song = player.songs[Number(tracks) - 1];
 

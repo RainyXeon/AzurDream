@@ -74,29 +74,28 @@ export default {
 
         msg.edit({ content: " ", embeds: [rewind1] });
       } else {
-        return msg.edit(
-          {
-            embeds: [
-              new EmbedBuilder()
-              .setDescription(`${client.i18n.get(language, "music", "rewind_beyond")}`,)
-              .setColor(client.color)
-            ]
-          }
-          
-        );
-      }
-    } else if (value && isNaN(value)) {
-      return msg.edit(
-        {
+        return msg.edit({
           embeds: [
             new EmbedBuilder()
-            .setDescription(`${client.i18n.get(language, "music", "rewind_invalid", {
-              prefix: "/",
-            })}`,)
-            .setColor(client.color)
-          ]
-        }
-      );
+              .setDescription(
+                `${client.i18n.get(language, "music", "rewind_beyond")}`,
+              )
+              .setColor(client.color),
+          ],
+        });
+      }
+    } else if (value && isNaN(value)) {
+      return msg.edit({
+        embeds: [
+          new EmbedBuilder()
+            .setDescription(
+              `${client.i18n.get(language, "music", "rewind_invalid", {
+                prefix: "/",
+              })}`,
+            )
+            .setColor(client.color),
+        ],
+      });
     }
 
     if (!value) {

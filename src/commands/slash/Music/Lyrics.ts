@@ -31,15 +31,13 @@ export default {
       interaction.options as CommandInteractionOptionResolver
     ).getString("input");
 
-    const msg = await interaction.editReply(
-      {
-        embeds: [
-          new EmbedBuilder()
+    const msg = await interaction.editReply({
+      embeds: [
+        new EmbedBuilder()
           .setDescription(`${client.i18n.get(language, "music", "loading")}`)
-          .setColor(client.color)
-        ]
-      }
-    );
+          .setColor(client.color),
+      ],
+    });
 
     const player = client.manager.getQueue(interaction.guild!);
     if (!player)

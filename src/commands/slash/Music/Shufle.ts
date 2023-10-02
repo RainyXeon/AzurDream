@@ -12,15 +12,15 @@ export default {
     language: string,
   ) => {
     await interaction.deferReply({ ephemeral: false });
-    const msg = await interaction.editReply(
-      {
-        embeds: [
-          new EmbedBuilder()
-          .setDescription(`${client.i18n.get(language, "music", "247_loading")}`)
-          .setColor(client.color)
-        ]
-      }
-    );
+    const msg = await interaction.editReply({
+      embeds: [
+        new EmbedBuilder()
+          .setDescription(
+            `${client.i18n.get(language, "music", "247_loading")}`,
+          )
+          .setColor(client.color),
+      ],
+    });
 
     const player = client.manager.getQueue(interaction.guild!);
     if (!player)

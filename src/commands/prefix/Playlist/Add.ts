@@ -36,9 +36,15 @@ export default {
     const url_value = args[1] ? args[1] : null;
 
     if (value == null || !value)
-      return message.channel.send(
-        `${client.i18n.get(language, "playlist", "invalid")}`,
-      );
+      return message.channel.send({
+        embeds: [
+          new EmbedBuilder()
+            .setDescription(
+              `${client.i18n.get(language, "playlist", "invalid")}`,
+            )
+            .setColor(client.color),
+        ],
+      });
     const input = args[1];
 
     const PlaylistName = value!.replace(/_/g, " ");
@@ -46,13 +52,25 @@ export default {
     const Inputed = input;
 
     if (!Inputed)
-      return message.channel.send(
-        `${client.i18n.get(language, "playlist", "invalid_url")}`,
-      );
+      return message.channel.send({
+        embeds: [
+          new EmbedBuilder()
+            .setDescription(
+              `${client.i18n.get(language, "playlist", "invalid_url")}`,
+            )
+            .setColor(client.color),
+        ],
+      });
 
-    const msg = await message.channel.send(
-      `${client.i18n.get(language, "playlist", "add_loading")}`,
-    );
+    const msg = await message.channel.send({
+      embeds: [
+        new EmbedBuilder()
+          .setDescription(
+            `${client.i18n.get(language, "playlist", "add_loading")}`,
+          )
+          .setColor(client.color),
+      ],
+    });
 
     let result = [];
 
@@ -76,7 +94,13 @@ export default {
 
     if (!tracks.length)
       return msg.edit({
-        content: `${client.i18n.get(language, "music", "add_match")}`,
+        embeds: [
+          new EmbedBuilder()
+            .setDescription(
+              `${client.i18n.get(language, "music", "add_match")}`,
+            )
+            .setColor(client.color),
+        ],
       });
     if (tracks.length > 1) for (let track of tracks) TrackAdd.push(track);
     else TrackAdd.push(tracks[0]);
@@ -132,7 +156,15 @@ export default {
       msg.edit({ content: " ", embeds: [embed] });
     } else {
       //The playlist link is invalid.
-      return msg.edit(`${client.i18n.get(language, "playlist", "add_match")}`);
+      return msg.edit({
+        embeds: [
+          new EmbedBuilder()
+            .setDescription(
+              `${client.i18n.get(language, "playlist", "add_match")}`,
+            )
+            .setColor(client.color),
+        ],
+      });
     }
 
     const fullList = await client.db.get("playlist");
@@ -147,25 +179,43 @@ export default {
     const playlist = fullList[pid[0]];
 
     if (playlist == null || !playlist)
-      return message.channel.send(
-        `${client.i18n.get(language, "playlist", "invalid")}`,
-      );
+      return message.channel.send({
+        embeds: [
+          new EmbedBuilder()
+            .setDescription(
+              `${client.i18n.get(language, "playlist", "invalid")}`,
+            )
+            .setColor(client.color),
+        ],
+      });
 
     if (playlist.owner !== message.author.id) {
-      message.channel.send(
-        `${client.i18n.get(language, "playlist", "add_owner")}`,
-      );
+      message.channel.send({
+        embeds: [
+          new EmbedBuilder()
+            .setDescription(
+              `${client.i18n.get(language, "playlist", "add_owner")}`,
+            )
+            .setColor(client.color),
+        ],
+      });
       TrackAdd.length = 0;
       return;
     }
     const LimitTrack = playlist.tracks.length + TrackAdd.length;
 
     if (LimitTrack > client.config.bot.LIMIT_TRACK) {
-      message.channel.send(
-        `${client.i18n.get(language, "playlist", "add_limit_track", {
-          limit: client.config.bot.LIMIT_TRACK,
-        })}`,
-      );
+      message.channel.send({
+        embeds: [
+          new EmbedBuilder()
+            .setDescription(
+              `${client.i18n.get(language, "playlist", "add_limit_track", {
+                limit: client.config.bot.LIMIT_TRACK,
+              })}`,
+            )
+            .setColor(client.color),
+        ],
+      });
       TrackAdd.length = 0;
       return;
     }

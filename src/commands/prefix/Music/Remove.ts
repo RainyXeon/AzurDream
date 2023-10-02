@@ -54,36 +54,35 @@ export default {
 
     const tracks = args[0];
     if (tracks && isNaN(+tracks))
-      return msg.edit(
-        {
-          embeds: [
-            new EmbedBuilder()
-            .setDescription(`${client.i18n.get(language, "music", "number_invalid")}`,)
-            .setColor(client.color)
-          ]
-        }
-      );
-    if (Number(tracks) == 0)
-      return msg.edit(        {
+      return msg.edit({
         embeds: [
           new EmbedBuilder()
-          .setDescription(`${client.i18n.get(language, "music", "removetrack_already")}`,)
-          .setColor(client.color)
-        ]
-      }
-
-      );
+            .setDescription(
+              `${client.i18n.get(language, "music", "number_invalid")}`,
+            )
+            .setColor(client.color),
+        ],
+      });
+    if (Number(tracks) == 0)
+      return msg.edit({
+        embeds: [
+          new EmbedBuilder()
+            .setDescription(
+              `${client.i18n.get(language, "music", "removetrack_already")}`,
+            )
+            .setColor(client.color),
+        ],
+      });
     if (Number(tracks) > player.songs.length)
-      return msg.edit(
-        {
-          embeds: [
-            new EmbedBuilder()
-            .setDescription(`${client.i18n.get(language, "music", "removetrack_notfound")}`)
-            .setColor(client.color)
-          ]
-        }
-        ,
-      );
+      return msg.edit({
+        embeds: [
+          new EmbedBuilder()
+            .setDescription(
+              `${client.i18n.get(language, "music", "removetrack_notfound")}`,
+            )
+            .setColor(client.color),
+        ],
+      });
 
     const song = player.songs[Number(tracks) - 1];
 

@@ -130,24 +130,24 @@ export default {
         return interaction.editReply({
           embeds: [
             new EmbedBuilder()
-            .setDescription(`${client.i18n.get(language, "music", "queue_notnumber")}`,)
-            .setColor(client.color)
-          ]
-        }
-          
-        );
+              .setDescription(
+                `${client.i18n.get(language, "music", "queue_notnumber")}`,
+              )
+              .setColor(client.color),
+          ],
+        });
       if (value > pagesNum)
-        return interaction.editReply(
-          {
-            embeds: [
-              new EmbedBuilder()
-              .setDescription(          `${client.i18n.get(language, "music", "queue_page_notfound", {
-                page: String(pagesNum),
-              })}`,)
-              .setColor(client.color)
-            ]
-          }
-        );
+        return interaction.editReply({
+          embeds: [
+            new EmbedBuilder()
+              .setDescription(
+                `${client.i18n.get(language, "music", "queue_page_notfound", {
+                  page: String(pagesNum),
+                })}`,
+              )
+              .setColor(client.color),
+          ],
+        });
       const pageNum = value == 0 ? 1 : value - 1;
       return interaction.editReply({ embeds: [pages[pageNum]] });
     }

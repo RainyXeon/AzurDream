@@ -47,15 +47,15 @@ export default {
       console.log(value);
     }
 
-    const msg = await interaction.editReply(
-      {
-        embeds: [
-          new EmbedBuilder()
-          .setDescription(`${client.i18n.get(language, "music", "247_loading")}`)
-          .setColor(client.color)
-        ]
-      }
-    );
+    const msg = await interaction.editReply({
+      embeds: [
+        new EmbedBuilder()
+          .setDescription(
+            `${client.i18n.get(language, "music", "247_loading")}`,
+          )
+          .setColor(client.color),
+      ],
+    });
 
     const player = client.manager.getQueue(interaction.guild!);
     if (!player)
@@ -88,9 +88,11 @@ export default {
       return msg.edit({
         embeds: [
           new EmbedBuilder()
-          .setDescription(`${client.i18n.get(language, "music", "seek_beyond")}`)
-          .setColor(client.color)
-        ]
+            .setDescription(
+              `${client.i18n.get(language, "music", "seek_beyond")}`,
+            )
+            .setColor(client.color),
+        ],
       });
     await player.seek(value);
 

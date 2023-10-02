@@ -14,15 +14,13 @@ export default {
   ) => {
     await interaction.deferReply({ ephemeral: false });
 
-    const msg = await interaction.editReply(
-      {
-        embeds: [
-          new EmbedBuilder()
+    const msg = await interaction.editReply({
+      embeds: [
+        new EmbedBuilder()
           .setDescription(`${client.i18n.get(language, "music", "loading")}`)
-          .setColor(client.color)
-        ]
-      }
-    );
+          .setColor(client.color),
+      ],
+    });
 
     const { channel } = (interaction.member as GuildMember).voice;
     if (
