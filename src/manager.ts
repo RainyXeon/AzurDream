@@ -132,13 +132,6 @@ export class Manager extends Client {
       emitNewSongOnly: true,
       emitAddSongWhenCreatingQueue: true,
       emitAddListWhenCreatingQueue: true,
-      ytdlOptions: {
-        highWaterMark: 1024 * 1024 * 64,
-        quality: "highestaudio",
-        filter: "audioonly",
-        liveBuffer: 60000,
-        dlChunkSize: 1024 * 1024 * 4,
-      },
       plugins: [
         this.config.distube.SPOTIFY.enable
           ? new SpotifyPlugin({
