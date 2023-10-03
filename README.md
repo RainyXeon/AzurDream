@@ -1,6 +1,6 @@
-### ByteBlaze
+### AzurDream
 
-A versatile and powerful music bot for Discord that brings rhythm and melody to your server. This is a big upgrade of Cylane!
+ByteBlaze no lavalink
 
 ## 📑 Short Feature
 
@@ -21,11 +21,8 @@ A versatile and powerful music bot for Discord that brings rhythm and melody to 
 - [x] Youtube
 - [x] SoundCloud
 - [x] Spotify
-- [x] Https (Radio)
 - [x] Deezer
-- [x] Twitch
-- [x] Bandcamp
-- [x] NicoVideo
+- [x] 700+ site (I think)
 
 ## 💾 Support Database
 
@@ -35,12 +32,4 @@ A versatile and powerful music bot for Discord that brings rhythm and melody to 
 
 ## ⚙️ Guide
 
-For installation and config guide, please check out the wiki tab or [click here!](https://github.com/RainyXeon/ByteBlaze/wiki)
-
-## 💫 Special thanks
-
-- [@DarrenOfficial](https://github.com/DarrenOfficial) [Lavalink Sources]
-- [@Pain6900](https://github.com/Pain6900) [My friend]
-- [@Adivise](https://github.com/Adivise) [Original source]
-- [@mrstebo](https://github.com/mrstebo) [env praser]
-- And everyone who starred and contribute my project 💖
+Document is not avalible so comming soon!
