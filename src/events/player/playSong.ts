@@ -142,7 +142,7 @@ export default async (client: Manager, queue: Queue, track: Song) => {
         return false;
       }
     },
-    time: track.duration,
+    time: track.duration * 1000,
   });
 
   collector.on("collect", async (message) => {
