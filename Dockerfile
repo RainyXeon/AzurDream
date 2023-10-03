@@ -1,5 +1,6 @@
 FROM node:alpine
 # Create the bot's directory
+RUN apk update
 RUN apk add python3 make gcc g++
 RUN mkdir -p /main/bot
 WORKDIR /main/bot
