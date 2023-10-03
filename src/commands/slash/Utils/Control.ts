@@ -40,9 +40,15 @@ export default {
         PermissionsBitField.Flags.ManageGuild,
       )
     )
-      return interaction.editReply(
-        `${client.i18n.get(language, "utilities", "lang_perm")}`,
-      );
+      return interaction.editReply({
+        embeds: [
+          new EmbedBuilder()
+            .setDescription(
+              `${client.i18n.get(language, "utilities", "lang_perm")}`,
+            )
+            .setColor(client.color),
+        ],
+      });
     if (
       (interaction.options as CommandInteractionOptionResolver).getString(
         "type",

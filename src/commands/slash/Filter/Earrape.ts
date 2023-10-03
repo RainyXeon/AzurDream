@@ -1,4 +1,9 @@
-import { EmbedBuilder, Message } from "discord.js";
+import {
+  CommandInteraction,
+  EmbedBuilder,
+  GuildMember,
+  Message,
+} from "discord.js";
 import delay from "delay";
 import { Manager } from "../../../manager.js";
 
@@ -10,27 +15,50 @@ export default {
   aliases: [],
 
   run: async (
+    interaction: CommandInteraction,
     client: Manager,
-    message: Message,
-    args: string[],
     language: string,
-    prefix: string,
   ) => {
-    const msg = await message.channel.send(
-      `${client.i18n.get(language, "filters", "filter_loading", {
-        name: "earrape",
-      })}`,
-    );
+    await interaction.deferReply({ ephemeral: false });
 
-    const player = client.manager.getQueue(message.guild!);
+    const msg = await interaction.editReply({
+      embeds: [
+        new EmbedBuilder()
+          .setDescription(
+            `${client.i18n.get(language, "filters", "filter_loading", {
+              name: "earrape",
+            })}`,
+          )
+          .setColor(client.color),
+      ],
+    });
+
+    const player = client.manager.getQueue(interaction.guild!.id);
     if (!player)
-      return msg.edit(`${client.i18n.get(language, "noplayer", "no_player")}`);
-    const { channel } = message.member!.voice;
+      return msg.edit({
+        embeds: [
+          new EmbedBuilder()
+            .setDescription(
+              `${client.i18n.get(language, "noplayer", "no_player")}`,
+            )
+            .setColor(client.color),
+        ],
+      });
+    const { channel } = (interaction.member as GuildMember).voice;
     if (
       !channel ||
-      message.member!.voice.channel !== message.guild!.members.me!.voice.channel
+      (interaction.member as GuildMember).voice.channel !==
+        interaction.guild!.members.me!.voice.channel
     )
-      return msg.edit(`${client.i18n.get(language, "noplayer", "no_voice")}`);
+      return msg.edit({
+        embeds: [
+          new EmbedBuilder()
+            .setDescription(
+              `${client.i18n.get(language, "noplayer", "no_voice")}`,
+            )
+            .setColor(client.color),
+        ],
+      });
 
     await player.setVolume(1000);
 

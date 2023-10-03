@@ -24,15 +24,23 @@ export default {
 
     if (!id && !mentions)
       return message.channel.send({
-        content: `${client.i18n.get(language, "premium", "remove_no_params")}`,
+        embeds: [
+          new EmbedBuilder()
+            .setDescription(
+              `${client.i18n.get(language, "premium", "remove_no_params")}`,
+            )
+            .setColor(client.color),
+        ],
       });
     if (id && mentions)
       return message.channel.send({
-        content: `${client.i18n.get(
-          language,
-          "premium",
-          "remove_only_params",
-        )}`,
+        embeds: [
+          new EmbedBuilder()
+            .setDescription(
+              `${client.i18n.get(language, "premium", "remove_only_params")}`,
+            )
+            .setColor(client.color),
+        ],
       });
 
     if (id && !mentions) db = await client.db.get(`premium.user_${id}`);
@@ -41,9 +49,15 @@ export default {
 
     if (!db)
       return message.channel.send({
-        content: `${client.i18n.get(language, "premium", "remove_404", {
-          userid: id as string,
-        })}`,
+        embeds: [
+          new EmbedBuilder()
+            .setDescription(
+              `${client.i18n.get(language, "premium", "remove_404", {
+                userid: id as string,
+              })}`,
+            )
+            .setColor(client.color),
+        ],
       });
 
     if (db.isPremium) {

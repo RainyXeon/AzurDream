@@ -51,21 +51,43 @@ export default {
     const playlist = fullList[pid[0]];
 
     if (!playlist)
-      return interaction.editReply(
-        `${client.i18n.get(language, "playlist", "remove_notfound")}`,
-      );
+      return interaction.editReply({
+        embeds: [
+          new EmbedBuilder()
+            .setDescription(
+              `${client.i18n.get(language, "playlist", "remove_notfound")}`,
+            )
+            .setColor(client.color),
+        ],
+      });
     if (playlist.owner !== interaction.user.id)
-      return interaction.editReply(
-        `${client.i18n.get(language, "playlist", "remove_owner")}`,
-      );
+      return interaction.editReply({
+        embeds: [
+          new EmbedBuilder()
+            .setDescription(
+              `${client.i18n.get(language, "playlist", "remove_owner")}`,
+            )
+            .setColor(client.color),
+        ],
+      });
 
     const position = pos;
 
     const song = playlist.tracks[position! - 1];
     if (!song)
-      return interaction.editReply(
-        `${client.i18n.get(language, "playlist", "remove_song_notfound")}`,
-      );
+      return interaction.editReply({
+        embeds: [
+          new EmbedBuilder()
+            .setDescription(
+              `${client.i18n.get(
+                language,
+                "playlist",
+                "remove_song_notfound",
+              )}`,
+            )
+            .setColor(client.color),
+        ],
+      });
 
     await client.db.pull(
       `playlist.${pid[0]}.tracks`,

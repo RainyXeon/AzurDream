@@ -42,13 +42,25 @@ export default {
     const playlist = fullList[pid[0]];
 
     if (!playlist)
-      return interaction.editReply(
-        `${client.i18n.get(language, "playlist", "public_notfound")}`,
-      );
+      return interaction.editReply({
+        embeds: [
+          new EmbedBuilder()
+            .setDescription(
+              `${client.i18n.get(language, "playlist", "public_notfound")}`,
+            )
+            .setColor(client.color),
+        ],
+      });
     if (playlist.owner !== interaction.user.id)
-      return interaction.editReply(
-        `${client.i18n.get(language, "playlist", "public_owner")}`,
-      );
+      return interaction.editReply({
+        embeds: [
+          new EmbedBuilder()
+            .setDescription(
+              `${client.i18n.get(language, "playlist", "public_owner")}`,
+            )
+            .setColor(client.color),
+        ],
+      });
 
     const Public = Object.keys(fullList)
       .filter(function (key) {
@@ -60,13 +72,25 @@ export default {
       });
 
     if (Public !== null || undefined || false)
-      return interaction.editReply(
-        `${client.i18n.get(language, "playlist", "public_already")}`,
-      );
+      return interaction.editReply({
+        embeds: [
+          new EmbedBuilder()
+            .setDescription(
+              `${client.i18n.get(language, "playlist", "public_already")}`,
+            )
+            .setColor(client.color),
+        ],
+      });
 
-    const msg = await interaction.editReply(
-      `${client.i18n.get(language, "playlist", "public_loading")}`,
-    );
+    const msg = await interaction.editReply({
+      embeds: [
+        new EmbedBuilder()
+          .setDescription(
+            `${client.i18n.get(language, "playlist", "public_loading")}`,
+          )
+          .setColor(client.color),
+      ],
+    });
 
     client.db.set(
       `playlist.pid_${playlist.id}.private`,

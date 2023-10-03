@@ -95,9 +95,15 @@ export default async (client: Manager, message: Message) => {
       PermissionsBitField.Flags.SendMessages,
     )
   )
-    return await message.author.dmChannel!.send(
-      `${client.i18n.get(language, "interaction", "no_perms")}`,
-    );
+    return await message.author.dmChannel!.send({
+      embeds: [
+        new EmbedBuilder()
+          .setDescription(
+            `${client.i18n.get(language, "interaction", "no_perms")}`,
+          )
+          .setColor(client.color),
+      ],
+    });
   if (
     !message.guild!.members.me!.permissions.has(
       PermissionsBitField.Flags.ViewChannel,
@@ -109,14 +115,26 @@ export default async (client: Manager, message: Message) => {
       PermissionsBitField.Flags.EmbedLinks,
     )
   )
-    return await message.channel.send(
-      `${client.i18n.get(language, "interaction", "no_perms")}`,
-    );
+    return await message.channel.send({
+      embeds: [
+        new EmbedBuilder()
+          .setDescription(
+            `${client.i18n.get(language, "interaction", "no_perms")}`,
+          )
+          .setColor(client.color),
+      ],
+    });
 
   if (command.owner && message.author.id != client.owner)
-    return message.channel.send(
-      `${client.i18n.get(language, "interaction", "owner_only")}`,
-    );
+    return message.channel.send({
+      embeds: [
+        new EmbedBuilder()
+          .setDescription(
+            `${client.i18n.get(language, "interaction", "owner_only")}`,
+          )
+          .setColor(client.color),
+      ],
+    });
 
   try {
     if (command.premium) {
@@ -139,7 +157,13 @@ export default async (client: Manager, message: Message) => {
   } catch (err) {
     client.logger.error(err);
     return message.channel.send({
-      content: `${client.i18n.get(language, "nopremium", "premium_error")}`,
+      embeds: [
+        new EmbedBuilder()
+          .setDescription(
+            `${client.i18n.get(language, "nopremium", "premium_error")}`,
+          )
+          .setColor(client.color),
+      ],
     });
   }
 
@@ -149,11 +173,13 @@ export default async (client: Manager, message: Message) => {
     } catch (error) {
       client.logger.error(error);
       message.channel.send({
-        content: `${client.i18n.get(
-          language,
-          "interaction",
-          "error",
-        )}\n ${error}`,
+        embeds: [
+          new EmbedBuilder()
+            .setDescription(
+              `${client.i18n.get(language, "interaction", "error")}\n ${error}`,
+            )
+            .setColor(client.color),
+        ],
       });
     }
   }

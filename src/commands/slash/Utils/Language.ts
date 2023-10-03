@@ -34,17 +34,29 @@ export default {
         PermissionsBitField.Flags.ManageGuild,
       )
     )
-      return interaction.editReply(
-        `${client.i18n.get(language, "utilities", "lang_perm")}`,
-      );
+      return interaction.editReply({
+        embeds: [
+          new EmbedBuilder()
+            .setDescription(
+              `${client.i18n.get(language, "utilities", "lang_perm")}`,
+            )
+            .setColor(client.color),
+        ],
+      });
     const languages = client.i18n.getLocales();
 
     if (!languages.includes(input as string))
-      return interaction.editReply(
-        `${client.i18n.get(language, "utilities", "provide_lang", {
-          languages: languages.join(", "),
-        })}`,
-      );
+      return interaction.editReply({
+        embeds: [
+          new EmbedBuilder()
+            .setDescription(
+              `${client.i18n.get(language, "utilities", "provide_lang", {
+                languages: languages.join(", "),
+              })}`,
+            )
+            .setColor(client.color),
+        ],
+      });
 
     const newLang = await client.db.get(
       `language.guild_${interaction.guild!.id}`,

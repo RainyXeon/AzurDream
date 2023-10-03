@@ -18,9 +18,15 @@ export default {
     prefix: string,
   ) => {
     if (!message.member!.permissions.has(PermissionsBitField.Flags.ManageGuild))
-      return message.channel.send(
-        `${client.i18n.get(language, "utilities", "control_perm")}`,
-      );
+      return message.channel.send({
+        embeds: [
+          new EmbedBuilder()
+            .setDescription(
+              `${client.i18n.get(language, "utilities", "control_perm")}`,
+            )
+            .setColor(client.color),
+        ],
+      });
 
     const db = await client.db.get(`control.guild_${message.guild!.id}`);
     const embed = new EmbedBuilder()

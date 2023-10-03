@@ -29,9 +29,15 @@ export default {
     const value = args[0] ? args[0] : null;
 
     if (value == null)
-      return message.channel.send(
-        `${client.i18n.get(language, "playlist", "invalid")}`,
-      );
+      return message.channel.send({
+        embeds: [
+          new EmbedBuilder()
+            .setDescription(
+              `${client.i18n.get(language, "playlist", "invalid")}`,
+            )
+            .setColor(client.color),
+        ],
+      });
 
     if (value) {
       const Plist = value.replace(/_/g, " ");
@@ -48,13 +54,25 @@ export default {
       info = fullList[pid[0]];
     }
     if (!info)
-      return message.channel.send(
-        `${client.i18n.get(language, "playlist", "invalid")}`,
-      );
+      return message.channel.send({
+        embeds: [
+          new EmbedBuilder()
+            .setDescription(
+              `${client.i18n.get(language, "playlist", "invalid")}`,
+            )
+            .setColor(client.color),
+        ],
+      });
     if (info.private && info.owner !== message.author.id) {
-      message.channel.send(
-        `${client.i18n.get(language, "playlist", "import_private")}`,
-      );
+      message.channel.send({
+        embeds: [
+          new EmbedBuilder()
+            .setDescription(
+              `${client.i18n.get(language, "playlist", "import_private")}`,
+            )
+            .setColor(client.color),
+        ],
+      });
       return;
     }
     const created = humanizeDuration(Date.now() - Number(info.created), {

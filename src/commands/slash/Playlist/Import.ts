@@ -44,27 +44,45 @@ export default {
     ).getString("id");
     const { channel } = (interaction.member as GuildMember).voice;
     if (!channel)
-      return interaction.editReply(
-        `${client.i18n.get(language, "playlist", "import_voice")}`,
-      );
+      return interaction.editReply({
+        embeds: [
+          new EmbedBuilder()
+            .setDescription(
+              `${client.i18n.get(language, "playlist", "import_voice")}`,
+            )
+            .setColor(client.color),
+        ],
+      });
     if (
       !interaction
         .guild!.members.cache.get(client.user!.id)!
         .permissionsIn(channel)
         .has(PermissionsBitField.Flags.Connect)
     )
-      return interaction.editReply(
-        `${client.i18n.get(language, "playlist", "import_join")}`,
-      );
+      return interaction.editReply({
+        embeds: [
+          new EmbedBuilder()
+            .setDescription(
+              `${client.i18n.get(language, "playlist", "import_join")}`,
+            )
+            .setColor(client.color),
+        ],
+      });
     if (
       !interaction
         .guild!.members.cache.get(client.user!.id)!
         .permissionsIn(channel)
         .has(PermissionsBitField.Flags.Speak)
     )
-      return interaction.editReply(
-        `${client.i18n.get(language, "playlist", "import_speak")}`,
-      );
+      return interaction.editReply({
+        embeds: [
+          new EmbedBuilder()
+            .setDescription(
+              `${client.i18n.get(language, "playlist", "import_speak")}`,
+            )
+            .setColor(client.color),
+        ],
+      });
 
     const SongAdd = [];
     let SongLoad = 0;
@@ -85,22 +103,46 @@ export default {
       playlist = fullList[pid[0]];
     }
     if (!id && !value)
-      return interaction.editReply(
-        `${client.i18n.get(language, "playlist", "no_id_or_name")}`,
-      );
+      return interaction.editReply({
+        embeds: [
+          new EmbedBuilder()
+            .setDescription(
+              `${client.i18n.get(language, "playlist", "no_id_or_name")}`,
+            )
+            .setColor(client.color),
+        ],
+      });
     if (id && value)
-      return interaction.editReply(
-        `${client.i18n.get(language, "playlist", "got_id_and_name")}`,
-      );
+      return interaction.editReply({
+        embeds: [
+          new EmbedBuilder()
+            .setDescription(
+              `${client.i18n.get(language, "playlist", "got_id_and_name")}`,
+            )
+            .setColor(client.color),
+        ],
+      });
     if (!playlist)
-      return interaction.editReply(
-        `${client.i18n.get(language, "playlist", "invalid")}`,
-      );
+      return interaction.editReply({
+        embeds: [
+          new EmbedBuilder()
+            .setDescription(
+              `${client.i18n.get(language, "playlist", "invalid")}`,
+            )
+            .setColor(client.color),
+        ],
+      });
 
     if (playlist.private && playlist.owner !== interaction.user.id) {
-      interaction.editReply(
-        `${client.i18n.get(language, "playlist", "import_private")}`,
-      );
+      interaction.editReply({
+        embeds: [
+          new EmbedBuilder()
+            .setDescription(
+              `${client.i18n.get(language, "playlist", "import_private")}`,
+            )
+            .setColor(client.color),
+        ],
+      });
       return;
     }
 
@@ -108,20 +150,32 @@ export default {
       playlist.tracks!.reduce((acc, cur) => acc + cur.length!, 0),
     );
 
-    const msg = await interaction.editReply(
-      `${client.i18n.get(language, "playlist", "import_loading", {
-        song_num: String(SongLoad),
-      })}`,
-    );
+    const msg = await interaction.editReply({
+      embeds: [
+        new EmbedBuilder()
+          .setDescription(
+            `${client.i18n.get(language, "playlist", "import_loading", {
+              song_num: String(SongLoad),
+            })}`,
+          )
+          .setColor(client.color),
+      ],
+    });
 
     for (let i = 0; i < playlist.tracks!.length; i++) {
       SongAdd.push(playlist.tracks![i].uri);
       SongLoad++;
-      msg.edit(
-        `${client.i18n.get(language, "playlist", "import_loading", {
-          song_num: String(SongLoad),
-        })}`,
-      );
+      msg.edit({
+        embeds: [
+          new EmbedBuilder()
+            .setDescription(
+              `${client.i18n.get(language, "playlist", "import_loading", {
+                song_num: String(SongLoad),
+              })}`,
+            )
+            .setColor(client.color),
+        ],
+      });
       if (SongLoad == playlist.tracks!.length) {
         const import_playlist = await client.manager.createCustomPlaylist(
           SongAdd,

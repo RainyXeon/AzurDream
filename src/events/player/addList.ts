@@ -9,9 +9,25 @@ export default async (client: Manager, queue: Queue, playlist: Playlist) => {
   if (queue.textChannel?.id! === setup_channel.channel) return;
   const msg = await queue.textChannel!.messages.cache.get(data);
 
+  let guildModel = await client.db.get(`language.guild_${queue.id}`);
+  if (!guildModel) {
+    guildModel = await client.db.set(
+      `language.guild_${queue.id}`,
+      client.config.bot.LANGUAGE,
+    );
+  }
+
+  const language = guildModel;
+
   const embed = new EmbedBuilder()
     .setDescription(
-      `**Queued • [${playlist.name}](${playlist.url})** \`${queue.formattedDuration}\` (${playlist.songs.length} tracks) • ${playlist.user}`,
+      `${client.i18n.get(language, "music", "play_playlist", {
+        title: playlist.name,
+        url: playlist.url!,
+        duration: playlist.formattedDuration,
+        songs: String(queue.songs.length),
+        request: String(playlist.user),
+      })}`,
     )
     .setColor(client.color);
 
