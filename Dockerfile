@@ -1,7 +1,7 @@
-FROM node:alpine
+FROM node:latest
 # Create the bot's directory
-RUN apk update
-RUN apk add python3 make gcc g++
+RUN apt-get update
+RUN apt-get install python3 make gcc g++
 RUN mkdir -p /main/bot
 WORKDIR /main/bot
 ENV NODE_PATH=/usr/local/lib/node_modules
