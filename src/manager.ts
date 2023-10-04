@@ -12,7 +12,7 @@ import { I18n } from "@hammerhq/localization";
 import { resolve } from "path";
 import * as configData from "./plugins/config.js";
 import winstonLogger from "./plugins/logger.js";
-import { DisTube, Queue } from "distube";
+import { DisTube, Queue, StreamType } from "distube";
 import { SpotifyPlugin } from "@distube/spotify";
 import { SoundCloudPlugin } from "@distube/soundcloud";
 import { YtDlpPlugin } from "@distube/yt-dlp";
@@ -132,6 +132,14 @@ export class Manager extends Client {
       emitNewSongOnly: true,
       emitAddSongWhenCreatingQueue: true,
       emitAddListWhenCreatingQueue: true,
+      streamType: StreamType.RAW,
+      ytdlOptions: {
+        highWaterMark: 1024 * 1024 * 64,
+        quality: "lowestaudio",
+        filter: "audioonly",
+        liveBuffer: 60000,
+        dlChunkSize: 1024 * 1024 * 4,
+      },
       plugins: [
         this.config.distube.SPOTIFY.enable
           ? new SpotifyPlugin({
