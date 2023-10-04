@@ -3,7 +3,6 @@ import { EmbedBuilder, TextChannel } from "discord.js";
 import formatDuration from "../../structures/FormatDuration.js";
 import { QueueDuration } from "../../structures/QueueDuration.js";
 import { Queue } from "distube";
-import delay from "delay";
 
 export default async (client: Manager) => {
   client.UpdateQueueMsg = async function (player: Queue) {
@@ -34,7 +33,7 @@ export default async (client: Manager) => {
       (song, i) =>
         `${client.i18n.get(language, "setup", "setup_content_queue", {
           index: `${i + 1}`,
-          title: String(song.name),
+          title: song.name ? String(song.name!) : "Unnamed",
           duration: formatDuration(song.duration),
           request: `${song.member}`,
         })}`,
