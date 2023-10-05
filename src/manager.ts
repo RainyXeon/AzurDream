@@ -129,7 +129,7 @@ export class Manager extends Client {
       leaveOnStop: false,
       leaveOnEmpty: false,
       leaveOnFinish: false,
-      emitNewSongOnly: true,
+      emitNewSongOnly: false,
       emitAddSongWhenCreatingQueue: true,
       emitAddListWhenCreatingQueue: true,
       streamType: StreamType.RAW,
