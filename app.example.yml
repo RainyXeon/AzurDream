@@ -13,6 +13,7 @@ bot:
   LIMIT_PLAYLIST: 20 # The number of playlist you want to limit
 
 distube:
+  DEFAULT: ["yorushika", "yoasobi", "tuyu", "hinkik"]
   SPOTIFY:
     enable: true
     id: luiasdjfhjjkadhflkjasdfhlkjasdfhf

@@ -156,7 +156,7 @@ export class Manager extends Client {
           : new SpotifyPlugin({
               emitEventsAfterFetching: true,
             }),
-        new YtDlpPlugin({ update: true }),
+        new YtDlpPlugin({ update: false }),
         new SoundCloudPlugin(),
         new DeezerPlugin(),
       ],

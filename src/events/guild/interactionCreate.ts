@@ -10,7 +10,9 @@ import { Manager } from "../../manager.js";
 import {
   AutocompleteInteractionChoices,
   GlobalInteraction,
+  ManualInteraction,
 } from "../../types/Interaction.js";
+import yts from "yt-search";
 
 /**
  * @param {GlobalInteraction} interaction
@@ -31,7 +33,8 @@ export default async (client: Manager, interaction: GlobalInteraction) => {
     interaction.isCommand() ||
     interaction.isContextMenuCommand() ||
     interaction.isModalSubmit() ||
-    interaction.isChatInputCommand()
+    interaction.isChatInputCommand() ||
+    interaction.isAutocomplete()
   ) {
     if (!interaction.guild || interaction.user.bot) return;
 
@@ -94,9 +97,10 @@ export default async (client: Manager, interaction: GlobalInteraction) => {
       url: string,
       choice: AutocompleteInteractionChoices[],
     ) {
+      let counter = 0
       const Random =
-        client.config.lavalink.DEFAULT[
-          Math.floor(Math.random() * client.config.lavalink.DEFAULT.length)
+        client.config.distube.DEFAULT[
+          Math.floor(Math.random() * client.config.distube.DEFAULT.length)
         ];
       const match = REGEX.some((match) => {
         return match.test(url) == true;
@@ -107,12 +111,12 @@ export default async (client: Manager, interaction: GlobalInteraction) => {
           .respond(choice)
           .catch(() => {});
       } else {
-        await client.manager.search(url || Random).then((result) => {
-          for (let i = 0; i < 10; i++) {
-            const x = result[i];
-            choice.push({ name: x.name, value: x.url });
-          }
-        });
+        const res = (await yts(url || Random)).videos
+        for (let i = 0; i < 11; i++) {
+          const result = res[i];
+          choice.push({ name: result.title, value: result.url });
+          
+        }
         await (interaction as AutocompleteInteraction)
           .respond(choice)
           .catch(() => {});
@@ -156,7 +160,7 @@ export default async (client: Manager, interaction: GlobalInteraction) => {
     client.logger.info(`${msg_cmd.join(" ")}`);
 
     if (command.owner && interaction.user.id != client.owner)
-      return interaction.reply({
+      return (interaction as ManualInteraction).reply({
         embeds: [
           new EmbedBuilder()
             .setDescription(
@@ -185,12 +189,12 @@ export default async (client: Manager, interaction: GlobalInteraction) => {
             .setColor(client.color)
             .setTimestamp();
 
-          return interaction.reply({ content: " ", embeds: [embed] });
+          return (interaction as ManualInteraction).reply({ content: " ", embeds: [embed] });
         }
       }
     } catch (err) {
       client.logger.error(err);
-      return interaction.reply({
+      return (interaction as ManualInteraction).reply({
         embeds: [
           new EmbedBuilder()
             .setDescription(
@@ -226,7 +230,7 @@ export default async (client: Manager, interaction: GlobalInteraction) => {
         PermissionsBitField.Flags.EmbedLinks,
       )
     )
-      return interaction.reply({
+      return (interaction as ManualInteraction).reply({
         embeds: [
           new EmbedBuilder()
             .setDescription(
@@ -241,7 +245,7 @@ export default async (client: Manager, interaction: GlobalInteraction) => {
           PermissionsBitField.Flags.Speak,
         )
       )
-        return interaction.reply({
+        return (interaction as ManualInteraction).reply({
           embeds: [
             new EmbedBuilder()
               .setDescription(
@@ -255,7 +259,7 @@ export default async (client: Manager, interaction: GlobalInteraction) => {
           PermissionsBitField.Flags.Connect,
         )
       )
-        return interaction.reply({
+        return (interaction as ManualInteraction).reply({
           embeds: [
             new EmbedBuilder()
               .setDescription(
@@ -269,7 +273,7 @@ export default async (client: Manager, interaction: GlobalInteraction) => {
           PermissionsBitField.Flags.ManageMessages,
         )
       )
-        return interaction.reply({
+        return (interaction as ManualInteraction).reply({
           embeds: [
             new EmbedBuilder()
               .setDescription(
@@ -283,7 +287,7 @@ export default async (client: Manager, interaction: GlobalInteraction) => {
           PermissionsBitField.Flags.ManageChannels,
         )
       )
-        return await interaction.reply({
+        return await (interaction as ManualInteraction).reply({
           embeds: [
             new EmbedBuilder()
               .setDescription(
@@ -303,7 +307,7 @@ export default async (client: Manager, interaction: GlobalInteraction) => {
           level: "error",
           message: error,
         });
-        return interaction.editReply({
+        return (interaction as ManualInteraction).editReply({
           embeds: [
             new EmbedBuilder()
               .setDescription(

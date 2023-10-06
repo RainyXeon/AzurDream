@@ -7,12 +7,6 @@ import {
   TextChannel,
 } from "discord.js";
 import { Manager } from "../../../manager.js";
-import yts from "yt-search";
-import { SearchResultType } from "distube";
-
-const REGEX =
-  /(?:https?:\/\/)?(:www|:music)?youtu(?:\.be\/|be.com\/\S*(?:watch|embed)(?:(?:(?=\/[-a-zA-Z0-9_]{11,}(?!\S))\/)|(?:\S*v=|v\/)))([-a-zA-Z0-9_]{11,})/;
-const SHORT_REGEX = /^.*(youtu.be\/|list=)([^#\&\?]*).*/;
 
 export default {
   name: "play",
