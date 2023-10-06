@@ -7,7 +7,7 @@ export default async (client: Manager, queue: Queue, playlist: Playlist) => {
   const setup_channel = await client.db.get(`setup.guild_${queue.id}`);
 
   if (queue.textChannel?.id! === setup_channel.channel) return;
-  const msg = await queue.textChannel!.messages.cache.get(data);
+  const msg = await queue.textChannel!.messages.cache.get(data?.message!);
 
   let guildModel = await client.db.get(`language.guild_${queue.id}`);
   if (!guildModel) {

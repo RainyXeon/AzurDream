@@ -42,7 +42,10 @@ export default {
       ],
     });
 
-    await client.queue_message.set(message.author.id, msg.id);
+    await client.queue_message.set(message.author.id, {
+      channel: message.channel.id,
+      message: msg.id,
+    });
 
     const { channel } = message.member!.voice;
     if (!channel)

@@ -5,7 +5,7 @@ import {
   ButtonStyle,
 } from "discord.js";
 import { Manager } from "../../manager.js";
-import { Queue, Song } from "distube";
+import { Queue, Song, formatDuration } from "distube";
 
 export default async (client: Manager, queue: Queue, track: Song) => {
   await client.UpdateQueueMsg(queue);
@@ -136,7 +136,7 @@ export default async (client: Manager, queue: Queue, track: Song) => {
         return true;
       else {
         message.reply({
-          content: "You need to be in a same/voice channel.",
+          content: `${client.i18n.get(language, "player", "join_voice")}`,
           ephemeral: true,
         });
         return false;
@@ -155,15 +155,19 @@ export default async (client: Manager, queue: Queue, track: Song) => {
       if (queue!.paused) {
         await client.manager.resume(message.guild.id);
         const embed = new EmbedBuilder()
-          .setColor("#000001")
-          .setDescription(`\`⏯\` | **Song has been:** \`Resumed\``);
+          .setColor(client.color)
+          .setDescription(
+            `${client.i18n.get(language, "player", "switch_resume")}`,
+          );
 
         message.reply({ embeds: [embed], ephemeral: true });
       } else {
         await client.manager.pause(message.guild.id);
         const embed = new EmbedBuilder()
-          .setColor("#000001")
-          .setDescription(`\`⏯\` | **Song has been:** \`Paused\``);
+          .setColor(client.color)
+          .setDescription(
+            `${client.i18n.get(language, "player", "switch_pause")}`,
+          );
 
         message.reply({ embeds: [embed], ephemeral: true });
       }
@@ -172,16 +176,13 @@ export default async (client: Manager, queue: Queue, track: Song) => {
         collector.stop();
       }
       if (queue!.songs.length === 1 && queue!.autoplay === false) {
-        const embed = new EmbedBuilder()
-          .setColor("#000001")
-          .setDescription("`🚨` | **There are no** `Songs` **in queue**");
-
-        message.reply({ embeds: [embed], ephemeral: true });
+        await client.manager.voices.leave(queue?.id!);
+        return;
       } else {
         await client.manager.skip(message);
         const embed = new EmbedBuilder()
-          .setColor("#000001")
-          .setDescription("`⏭` | **Song has been:** `Skipped`");
+          .setColor(client.color)
+          .setDescription(`${client.i18n.get(language, "player", "skip_msg")}`);
 
         nowplay.edit({ components: [] });
         message.reply({ embeds: [embed], ephemeral: true });
@@ -192,8 +193,8 @@ export default async (client: Manager, queue: Queue, track: Song) => {
       }
       await client.manager.voices.leave(message.guild);
       const embed = new EmbedBuilder()
-        .setDescription(`\`🚫\` | **Song has been:** | \`Stopped\``)
-        .setColor("#000001");
+        .setDescription(`${client.i18n.get(language, "player", "stop_msg")}`)
+        .setColor(client.color);
 
       await nowplay.edit({ components: [] });
       message.reply({ embeds: [embed], ephemeral: true });
@@ -204,15 +205,19 @@ export default async (client: Manager, queue: Queue, track: Song) => {
       if (queue!.repeatMode === 0) {
         client.manager.setRepeatMode(message.guild.id, 1);
         const embed = new EmbedBuilder()
-          .setColor("#000001")
-          .setDescription(`\`🔁\` | **Song is loop:** \`Current\``);
+          .setColor(client.color)
+          .setDescription(
+            `${client.i18n.get(language, "music", "loop_current")}`,
+          );
 
         message.reply({ embeds: [embed], ephemeral: true });
       } else {
         client.manager.setRepeatMode(message.guild.id, 0);
         const embed = new EmbedBuilder()
-          .setColor("#000001")
-          .setDescription(`\`🔁\` | **Song is unloop:** \`Current\``);
+          .setColor(client.color)
+          .setDescription(
+            `${client.i18n.get(language, "music", "unloop_current")}`,
+          );
 
         message.reply({ embeds: [embed], ephemeral: true });
       }
@@ -222,15 +227,19 @@ export default async (client: Manager, queue: Queue, track: Song) => {
       }
       if (queue!.previousSongs.length == 0) {
         const embed = new EmbedBuilder()
-          .setColor("#000001")
-          .setDescription("`🚨` | **There are no** `Previous` **songs**");
+          .setColor(client.color)
+          .setDescription(
+            `${client.i18n.get(language, "music", "previous_notfound")}`,
+          );
 
         message.reply({ embeds: [embed], ephemeral: true });
       } else {
         await client.manager.previous(message);
         const embed = new EmbedBuilder()
-          .setColor("#000001")
-          .setDescription("`⏮` | **Song has been:** `Previous`");
+          .setColor(client.color)
+          .setDescription(
+            `${client.i18n.get(language, "music", "previous_msg")}`,
+          );
 
         await nowplay.edit({ components: [] });
         message.reply({ embeds: [embed], ephemeral: true });
@@ -242,7 +251,9 @@ export default async (client: Manager, queue: Queue, track: Song) => {
       await client.manager.shuffle(message);
       const embed = new EmbedBuilder()
         .setColor(client.color)
-        .setDescription(`\`🔀\` | **Song has been:** \`Shuffle\``);
+        .setDescription(
+          `${client.i18n.get(language, "player", "shuffle_msg")}`,
+        );
 
       message.reply({ embeds: [embed], ephemeral: true });
     } else if (id === "voldown") {
@@ -250,11 +261,11 @@ export default async (client: Manager, queue: Queue, track: Song) => {
         collector.stop();
       }
       await client.manager.setVolume(message, queue!.volume - 5);
-      const embed = new EmbedBuilder()
-        .setColor(client.color)
-        .setDescription(
-          `\`🔊\` | **Decrease volume to:** \`${queue!.volume}\`%`,
-        );
+      const embed = new EmbedBuilder().setColor(client.color).setDescription(
+        `${client.i18n.get(language, "player", "voldown_msg", {
+          volume: `${queue!.volume}`,
+        })}`,
+      );
 
       message.reply({ embeds: [embed], ephemeral: true });
     } else if (id === "clear") {
@@ -264,7 +275,7 @@ export default async (client: Manager, queue: Queue, track: Song) => {
       await queue!.songs.splice(1, queue!.songs.length);
 
       const embed = new EmbedBuilder()
-        .setDescription(`\`📛\` | **Queue has been:** \`Cleared\``)
+        .setDescription(`${client.i18n.get(language, "player", "clear_msg")}`)
         .setColor(client.color);
 
       message.reply({ embeds: [embed], ephemeral: true });
@@ -273,55 +284,70 @@ export default async (client: Manager, queue: Queue, track: Song) => {
         collector.stop();
       }
       await client.manager.setVolume(message, queue!.volume + 5);
-      const embed = new EmbedBuilder()
-        .setColor(client.color)
-        .setDescription(
-          `\`🔊\` | **Increase volume to:** \`${queue!.volume}\`%`,
-        );
+      const embed = new EmbedBuilder().setColor(client.color).setDescription(
+        `${client.i18n.get(language, "player", "volup_msg", {
+          volume: `${queue!.volume}`,
+        })}`,
+      );
 
       message.reply({ embeds: [embed], ephemeral: true });
     } else if (id === "queue") {
       if (!queue) {
         collector.stop();
       }
+      const song = queue!.songs[0];
+      const qduration = `${song.formattedDuration}`;
+      const thumbnail = `https://img.youtube.com/vi/${
+        song!.uploader
+      }/hqdefault.jpg`;
+
       let pagesNum = Math.ceil(queue!.songs.length / 10);
       if (pagesNum === 0) pagesNum = 1;
 
       const songStrings = [];
-      for (let i = 1; i < queue!.songs.length; i++) {
+      for (let i = 0; i < queue!.songs.length; i++) {
         const song = queue!.songs[i];
         songStrings.push(
-          `**${i}.** [${song.name}](${song.url}) \`[${song.formattedDuration}]\` • ${song.user}
-          `,
+          `**${i + 1}.** [${song.name}](${song.url}) \`[${formatDuration(
+            song.duration,
+          )}]\`
+            `,
         );
       }
 
       const pages = [];
       for (let i = 0; i < pagesNum; i++) {
         const str = songStrings.slice(i * 10, i * 10 + 10).join("");
+
         const embed = new EmbedBuilder()
           .setAuthor({
-            name: `Queue - ${message.guild.name}`,
-            iconURL: String(message.guild.iconURL()),
+            name: `${client.i18n.get(language, "player", "queue_author", {
+              guild: message.guild.name,
+            })}`,
+            iconURL: message.guild.iconURL()!,
           })
-          .setThumbnail(String(queue!.songs[0].thumbnail))
+          .setThumbnail(thumbnail)
           .setColor(client.color)
           .setDescription(
-            `**Currently Playing:**\n**[${queue!.songs[0].name}](${
-              queue!.songs[0].url
-            })** \`[${queue!.songs[0].formattedDuration}]\` • ${
-              queue!.songs[0].user
-            }\n\n**Rest of queue**${str == "" ? "  Nothing" : "\n" + str}`,
+            `${client.i18n.get(language, "player", "queue_description", {
+              track: song!.name!,
+              track_url: song!.url,
+              duration: formatDuration(queue?.duration!),
+              requester: `${song!.user}`,
+              list_song: str == "" ? "  Nothing" : "\n" + str,
+            })}`,
           )
           .setFooter({
-            text: `Page • ${i + 1}/${pagesNum} | ${
-              queue!.songs.length
-            } • Songs | ${queue!.formattedDuration} • Total duration`,
+            text: `${client.i18n.get(language, "player", "queue_footer", {
+              page: `${i + 1}`,
+              pages: `${pagesNum}`,
+              queue_lang: `${queue!.songs.length}`,
+              total_duration: qduration,
+            })}`,
           });
 
         pages.push(embed);
       }
-
       message.reply({ embeds: [pages[0]], ephemeral: true });
     }
   });

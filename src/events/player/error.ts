@@ -20,7 +20,7 @@ export default async (
   channel.send({
     embeds: [
       new EmbedBuilder()
-        .setDescription(`${client.i18n.get("error", "player_error", language)}`)
+        .setDescription(`${client.i18n.get(language, "error", "player_error")}`)
         .setColor(client.color),
     ],
   });

@@ -35,7 +35,6 @@ export default {
         )
       ) {
         await interaction.deferReply({ ephemeral: false });
-        let player = client.manager.getQueue(interaction.guild!);
         const value = (
           interaction.options as CommandInteractionOptionResolver
         ).get("search")!.value;
@@ -54,7 +53,10 @@ export default {
               .setColor(client.color),
           ],
         });
-        await client.queue_message.set(interaction.user.id, msg.id);
+        await client.queue_message.set(interaction.user.id, {
+          channel: interaction.channel!.id,
+          message: msg.id,
+        });
 
         const { channel } = (interaction.member as GuildMember).voice;
         if (!channel)

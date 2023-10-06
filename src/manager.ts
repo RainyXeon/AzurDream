@@ -25,6 +25,10 @@ import { DeezerPlugin } from "@distube/deezer";
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
 winstonLogger.info("Booting client...");
+type ChannelMessageDataType = {
+  channel: string;
+  message: string;
+};
 
 export class Manager extends Client {
   // Interface
@@ -54,7 +58,7 @@ export class Manager extends Client {
   diSwitch!: ActionRowBuilder<ButtonBuilder>;
   is_db_connected: boolean;
   ws_message?: Collection<string, any>;
-  queue_message: Collection<string, any>;
+  queue_message: Collection<string, ChannelMessageDataType>;
   query_message: Collection<string, any>;
   is_using_import: Collection<string, any>;
 
