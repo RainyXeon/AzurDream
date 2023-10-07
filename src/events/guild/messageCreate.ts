@@ -169,6 +169,7 @@ export default async (client: Manager, message: Message) => {
 
   if (command) {
     try {
+      client.logger.log(`[COMMAND] used by ${message.author.globalName} from ${message.guild!.name} (${message.guild!.id})`,)
       command.run(client, message, args, language, PREFIX);
     } catch (error) {
       client.logger.error(error);
