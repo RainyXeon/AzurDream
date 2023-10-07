@@ -97,7 +97,6 @@ export default async (client: Manager, interaction: GlobalInteraction) => {
       url: string,
       choice: AutocompleteInteractionChoices[],
     ) {
-      let counter = 0
       const Random =
         client.config.distube.DEFAULT[
           Math.floor(Math.random() * client.config.distube.DEFAULT.length)
